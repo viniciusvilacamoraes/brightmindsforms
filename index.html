@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Minds — Diagnóstico Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--y:#FFD700;--b:#0D0D0D;--font:'Barlow',Arial,sans-serif}
+body{font-family:var(--font);background:var(--b);color:#fff;min-height:100vh}
+.hd{background:var(--y);padding:20px 28px;display:flex;align-items:center;gap:14px}
+.hd-logo{width:38px;height:38px;background:var(--b);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.hd-logo svg{width:20px;height:20px}
+.hd-brand{font-weight:900;font-size:17px;color:var(--b);line-height:1}
+.hd-sub{font-size:12px;color:var(--b);opacity:.6;margin-top:2px}
+.prog{height:3px;background:#1a1a1a}
+.prog-f{height:3px;background:var(--y);transition:width .4s}
+.wrap{max-width:600px;margin:0 auto;padding:32px 20px 60px}
+.step{display:none}.step.on{display:block}
+.lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--y);text-transform:uppercase;margin-bottom:5px}
+.ttl{font-weight:900;font-size:24px;line-height:1.2;margin-bottom:6px}
+.sub{font-size:14px;color:#888;margin-bottom:26px;line-height:1.5}
+.fg{margin-bottom:18px}
+.fl{display:block;font-size:12px;font-weight:700;color:#bbb;margin-bottom:7px}
+.fl .r{color:var(--y);margin-left:2px}
+input[type=text],input[type=email],input[type=tel],textarea{
+  width:100%;background:#1a1a1a;border:1.5px solid #2a2a2a;border-radius:8px;
+  padding:12px 15px;font-family:var(--font);font-size:14px;color:#fff;outline:none;transition:border-color .2s}
+input:focus,textarea:focus{border-color:var(--y)}
+textarea{resize:vertical;min-height:84px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* RADIO */
+.rg{display:grid;gap:8px}.rg.c2{grid-template-columns:1fr 1fr}.rg.c1{grid-template-columns:1fr}
+.rc{background:#1a1a1a;border:1.5px solid #2a2a2a;border-radius:10px;padding:12px 14px;
+    cursor:pointer;display:flex;align-items:flex-start;gap:10px;transition:border-color .2s,background .2s;user-select:none}
+.rc:hover{border-color:var(--y);background:#1f1f1f}
+.rc.on{border-color:var(--y);background:#1f1a00}
+.rb{width:16px;height:16px;border-radius:50%;border:2px solid #444;flex-shrink:0;margin-top:3px;
+    display:flex;align-items:center;justify-content:center;transition:all .2s}
+.rc.on .rb{border-color:var(--y);background:var(--y)}
+.rc.on .rb::after{content:'';width:5px;height:5px;background:var(--b);border-radius:50%}
+.rc-t strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:1px}
+.rc-t span{font-size:12px;color:#777;line-height:1.4}
+/* CHECKBOX — sem onclick, usa label nativo */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cc{display:flex;align-items:center;gap:10px;background:#1a1a1a;border:1.5px solid #2a2a2a;
+    border-radius:10px;padding:12px 14px;cursor:pointer;user-select:none;transition:border-color .2s,background .2s}
+.cc:hover{border-color:var(--y)}
+.cc input[type=checkbox]{display:none}
+.cb{width:16px;height:16px;border-radius:4px;border:2px solid #444;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cc input:checked ~ .cb-wrap .cb,
+.cc.on .cb{background:var(--y);border-color:var(--y)}
+.cc input:checked ~ .cb-wrap .cb::after,
+.cc.on .cb::after{content:'✓';font-size:10px;font-weight:900;color:var(--b)}
+.cc-l{font-size:13px;font-weight:500;color:#ddd;line-height:1.3}
+hr.dv{border:none;border-top:1px solid #1f1f1f;margin:20px 0}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:32px;gap:12px}
+.btn-b{background:transparent;border:1.5px solid #2a2a2a;border-radius:8px;padding:12px 20px;
+  font-family:var(--font);font-size:14px;font-weight:700;color:#666;cursor:pointer;transition:all .2s}
+.btn-b:hover{border-color:#555;color:#aaa}
+.btn-n{background:var(--y);border:none;border-radius:8px;padding:13px 28px;
+  font-family:var(--font);font-size:14px;font-weight:900;color:var(--b);cursor:pointer;
+  flex:1;max-width:240px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-n:hover{background:#ffe033}.btn-n:active{transform:scale(.98)}
+/* SUMMARY */
+.badge{display:inline-flex;align-items:center;gap:8px;font-weight:900;font-size:16px;
+  border-radius:8px;padding:9px 16px;margin:10px 0 14px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0}
+.si{background:#1a1a1a;border-radius:8px;padding:12px;border:1px solid #1f1f1f}
+.si-l{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#444;margin-bottom:3px}
+.si-v{font-size:13px;font-weight:700;color:#fff}
+.rc-card{background:#1f1a00;border:1.5px solid var(--y);border-radius:10px;padding:16px;margin:16px 0}
+.rc-card h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--y);margin-bottom:10px}
+.ri{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.ri .dot{color:var(--y);font-size:14px;flex-shrink:0;margin-top:1px}
+.ri p{font-size:13px;color:#bbb;line-height:1.5}
+.info{background:#1a1a1a;border-left:3px solid var(--y);border-radius:8px;padding:12px 14px;
+  margin-bottom:18px;font-size:13px;color:#999;line-height:1.5}
+.info strong{color:var(--y)}
+.btn-ok{width:100%;background:var(--y);border:none;border-radius:8px;padding:15px;
+  font-family:var(--font);font-size:15px;font-weight:900;color:var(--b);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-top:18px}
+.btn-ok:hover{background:#ffe033}.btn-ok:disabled{opacity:.4;cursor:not-allowed}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--b);
+  border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.err{background:#2a0000;border:1px solid #800;border-radius:8px;padding:11px 14px;
+  font-size:13px;color:#ff9999;margin-top:12px;display:none}
+.err.on{display:block}
+/* SUCCESS */
+.suc{display:none;text-align:center;padding:52px 20px}
+.suc.on{display:block}
+.suc-ic{width:68px;height:68px;background:var(--y);border-radius:50%;display:flex;
+  align-items:center;justify-content:center;margin:0 auto 20px;font-size:30px;color:var(--b);font-weight:900}
+.pill{display:inline-block;background:#1f1a00;border:1px solid var(--y);color:var(--y);
+  font-size:12px;font-weight:700;border-radius:20px;padding:4px 12px;margin:3px}
+@media(max-width:480px){.two,.rg.c2,.cg,.sg{grid-template-columns:1fr}.ttl{font-size:20px}}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.4-1.3 4.5-3 5.7V17H9v-2.3C7.3 13.5 6 11.4 6 9a6 6 0 0 1 6-6z"/>
+    </svg>
+  </div>
+  <div>
+    <div class="hd-brand">BRIGHT MINDS</div>
+    <div class="hd-sub">Diagnóstico financeiro · Consulta individual</div>
+  </div>
+</div>
+<div class="prog"><div class="prog-f" id="prog" style="width:20%"></div></div>
+
+<div class="wrap">
+
+  <!-- S1 -->
+  <div class="step on" id="s1">
+    <div class="lbl">Etapa 1 de 5</div>
+    <div class="ttl">Vamos nos conhecer</div>
+    <div class="sub">Informações básicas para eu me preparar para o nosso encontro.</div>
+    <div class="two">
+      <div class="fg"><label class="fl">Nome completo <span class="r">*</span></label><input type="text" id="nome" placeholder="Seu nome"></div>
+      <div class="fg"><label class="fl">WhatsApp <span class="r">*</span></label><input type="tel" id="fone" placeholder="(11) 99999-9999"></div>
+    </div>
+    <div class="fg"><label class="fl">E-mail <span class="r">*</span></label><input type="email" id="email" placeholder="seu@email.com"></div>
+    <div class="fg"><label class="fl">Cidade e Estado</label><input type="text" id="cidade" placeholder="Ex: São Paulo - SP"></div>
+    <div class="fg"><label class="fl">Profissão / área de atuação</label><input type="text" id="prof" placeholder="Ex: Médica, Engenheiro…"></div>
+    <div class="nav"><div></div><button class="btn-n" onclick="ir(1,2)">Próximo →</button></div>
+  </div>
+
+  <!-- S2 -->
+  <div class="step" id="s2">
+    <div class="lbl">Etapa 2 de 5</div>
+    <div class="ttl">Sua relação com o dinheiro</div>
+    <div class="sub">Quero entender onde você está hoje para chegar preparado.</div>
+    <div class="fg">
+      <label class="fl">Como você se descreve financeiramente hoje? <span class="r">*</span></label>
+      <div class="rg c1" id="rg-perf">
+        <div class="rc" onclick="pick(this,'rg-perf','perf','iniciante')"><div class="rb"></div><div class="rc-t"><strong>Estou começando do zero</strong><span>Pouco conhecimento financeiro, ainda não invisto</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-perf','perf','construindo')"><div class="rb"></div><div class="rc-t"><strong>Estou construindo minha base</strong><span>Já tenho alguma reserva, mas quero evoluir</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-perf','perf','investidor')"><div class="rb"></div><div class="rc-t"><strong>Já sou investidor ativo</strong><span>Tenho carteira montada e busco otimizar</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-perf','perf','perdido')"><div class="rb"></div><div class="rc-t"><strong>Ganho bem mas não consigo guardar</strong><span>Renda ok, mas dinheiro some — preciso de organização</span></div></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Você tem investimentos atualmente?</label>
+      <div class="rg c2" id="rg-inv">
+        <div class="rc" onclick="pick(this,'rg-inv','inv','sim_xp')"><div class="rb"></div><div class="rc-t"><strong>Sim, na XP / assessoria</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-inv','inv','sim_outros')"><div class="rb"></div><div class="rc-t"><strong>Sim, em outros bancos</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-inv','inv','poupanca')"><div class="rb"></div><div class="rc-t"><strong>Só poupança</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-inv','inv','nao')"><div class="rb"></div><div class="rc-t"><strong>Não tenho investimentos</strong></div></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Maior dificuldade financeira hoje (pode marcar mais de uma)</label>
+      <div class="cg">
+        <label class="cc"><input type="checkbox" value="gastos"><div class="cb"></div><span class="cc-l">Controlar os gastos</span></label>
+        <label class="cc"><input type="checkbox" value="guardar"><div class="cb"></div><span class="cc-l">Conseguir guardar dinheiro</span></label>
+        <label class="cc"><input type="checkbox" value="investir"><div class="cb"></div><span class="cc-l">Saber onde investir</span></label>
+        <label class="cc"><input type="checkbox" value="dividas"><div class="cb"></div><span class="cc-l">Sair de dívidas</span></label>
+        <label class="cc"><input type="checkbox" value="patrimonio"><div class="cb"></div><span class="cc-l">Fazer o patrimônio crescer</span></label>
+        <label class="cc"><input type="checkbox" value="independencia"><div class="cb"></div><span class="cc-l">Alcançar independência financeira</span></label>
+        <label class="cc"><input type="checkbox" value="protecao"><div class="cb"></div><span class="cc-l">Proteção e planejamento familiar</span></label>
+        <label class="cc"><input type="checkbox" value="entender"><div class="cb"></div><span class="cc-l">Entender como funciona o mercado</span></label>
+      </div>
+    </div>
+    <div class="nav"><button class="btn-b" onclick="ir(2,1)">← Voltar</button><button class="btn-n" onclick="ir(2,3)">Próximo →</button></div>
+  </div>
+
+  <!-- S3 -->
+  <div class="step" id="s3">
+    <div class="lbl">Etapa 3 de 5</div>
+    <div class="ttl">Sua situação hoje</div>
+    <div class="sub">Informações que me ajudam a calibrar bem a nossa conversa.</div>
+    <div class="fg">
+      <label class="fl">Renda mensal líquida</label>
+      <div class="rg c1" id="rg-renda">
+        <div class="rc" onclick="pick(this,'rg-renda','renda','ate3k')"><div class="rb"></div><div class="rc-t"><strong>Até R$ 3.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-renda','renda','3a7k')"><div class="rb"></div><div class="rc-t"><strong>R$ 3.000 a R$ 7.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-renda','renda','7a15k')"><div class="rb"></div><div class="rc-t"><strong>R$ 7.000 a R$ 15.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-renda','renda','15a30k')"><div class="rb"></div><div class="rc-t"><strong>R$ 15.000 a R$ 30.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-renda','renda','acima30k')"><div class="rb"></div><div class="rc-t"><strong>Acima de R$ 30.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-renda','renda','nd')"><div class="rb"></div><div class="rc-t"><strong>Prefiro não informar</strong></div></div>
+      </div>
+    </div>
+    <hr class="dv">
+    <div class="fg">
+      <label class="fl">Patrimônio investido / guardado hoje</label>
+      <div class="rg c1" id="rg-pat">
+        <div class="rc" onclick="pick(this,'rg-pat','pat','negativo')"><div class="rb"></div><div class="rc-t"><strong>Estou endividado</strong><span>Dívidas superam o que tenho guardado</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-pat','pat','zerado')"><div class="rb"></div><div class="rc-t"><strong>Zerado / praticamente zerado</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-pat','pat','ate50k')"><div class="rb"></div><div class="rc-t"><strong>Até R$ 50.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-pat','pat','50a300k')"><div class="rb"></div><div class="rc-t"><strong>R$ 50.000 a R$ 300.000</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-pat','pat','acima300k')"><div class="rb"></div><div class="rc-t"><strong>Acima de R$ 300.000</strong></div></div>
+      </div>
+    </div>
+    <div class="nav"><button class="btn-b" onclick="ir(3,2)">← Voltar</button><button class="btn-n" onclick="ir(3,4)">Próximo →</button></div>
+  </div>
+
+  <!-- S4 -->
+  <div class="step" id="s4">
+    <div class="lbl">Etapa 4 de 5</div>
+    <div class="ttl">Objetivos e mentalidade</div>
+    <div class="sub">O que você quer construir e como você pensa sobre isso.</div>
+    <div class="fg">
+      <label class="fl">Seu maior sonho financeiro <span class="r">*</span></label>
+      <div class="rg c1" id="rg-obj">
+        <div class="rc" onclick="pick(this,'rg-obj','obj','independencia')"><div class="rb"></div><div class="rc-t"><strong>Liberdade financeira / aposentadoria antecipada</strong><span>Não depender de salário para viver bem</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-obj','obj','imovel')"><div class="rb"></div><div class="rc-t"><strong>Comprar imóvel / sair do aluguel</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-obj','obj','renda_passiva')"><div class="rb"></div><div class="rc-t"><strong>Construir renda passiva</strong><span>Dinheiro trabalhando pra mim todo mês</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-obj','obj','negocio')"><div class="rb"></div><div class="rc-t"><strong>Abrir / escalar meu negócio</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-obj','obj','qualidade_vida')"><div class="rb"></div><div class="rc-t"><strong>Melhorar a qualidade de vida agora</strong><span>Viajar, educação, estilo de vida</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-obj','obj','estabilidade')"><div class="rb"></div><div class="rc-t"><strong>Segurança e estabilidade</strong></div></div>
+      </div>
+    </div>
+    <hr class="dv">
+    <div class="fg">
+      <label class="fl">Em quanto tempo quer ver mudanças reais?</label>
+      <div class="rg c2" id="rg-prazo">
+        <div class="rc" onclick="pick(this,'rg-prazo','prazo','6m')"><div class="rb"></div><div class="rc-t"><strong>Nos próximos 6 meses</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-prazo','prazo','1a')"><div class="rb"></div><div class="rc-t"><strong>No próximo ano</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-prazo','prazo','3a')"><div class="rb"></div><div class="rc-t"><strong>Em 2 a 3 anos</strong></div></div>
+        <div class="rc" onclick="pick(this,'rg-prazo','prazo','longo')"><div class="rb"></div><div class="rc-t"><strong>Longo prazo (5+ anos)</strong></div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Já tentou mudar sua vida financeira antes? O que aconteceu?</label><textarea id="tentativa" placeholder="Tentou cursos, planilhas, assessor? O que funcionou ou não?"></textarea></div>
+    <div class="nav"><button class="btn-b" onclick="ir(4,3)">← Voltar</button><button class="btn-n" onclick="ir(4,5)">Próximo →</button></div>
+  </div>
+
+  <!-- S5 -->
+  <div class="step" id="s5">
+    <div class="lbl">Etapa 5 de 5</div>
+    <div class="ttl">Para a nossa conversa</div>
+    <div class="sub">Me ajude a deixar o nosso encontro ainda mais útil pra você.</div>
+    <div class="fg">
+      <label class="fl">O que você espera da consulta? <span class="r">*</span></label>
+      <div class="cg">
+        <label class="cc"><input type="checkbox" value="carteira"><div class="cb"></div><span class="cc-l">Analisar minha carteira atual</span></label>
+        <label class="cc"><input type="checkbox" value="plano"><div class="cb"></div><span class="cc-l">Ter um plano de ação claro</span></label>
+        <label class="cc"><input type="checkbox" value="opcoes"><div class="cb"></div><span class="cc-l">Entender quais são minhas opções</span></label>
+        <label class="cc"><input type="checkbox" value="motivacao"><div class="cb"></div><span class="cc-l">Motivação para começar de vez</span></label>
+        <label class="cc"><input type="checkbox" value="acompanhamento"><div class="cb"></div><span class="cc-l">Ter acompanhamento contínuo</span></label>
+        <label class="cc"><input type="checkbox" value="aprender"><div class="cb"></div><span class="cc-l">Aprender a decidir sozinho</span></label>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Como prefere aprender e ser acompanhado?</label>
+      <div class="rg c1" id="rg-estilo">
+        <div class="rc" onclick="pick(this,'rg-estilo','estilo','pratico')"><div class="rb"></div><div class="rc-t"><strong>Prático e direto</strong><span>Me diz o que fazer, prefiro ação rápida</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-estilo','estilo','entender')"><div class="rb"></div><div class="rc-t"><strong>Quero entender o porquê</strong><span>Aprendo melhor quando compreendo a lógica</span></div></div>
+        <div class="rc" onclick="pick(this,'rg-estilo','estilo','acompanhado')"><div class="rb"></div><div class="rc-t"><strong>Preciso de acompanhamento</strong><span>Sei o que fazer, mas preciso de alguém ao lado</span></div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">O que mais te preocupa na sua vida financeira?</label><textarea id="preoc" placeholder="Fala à vontade. Quanto mais detalhe, mais eu consigo ajudar…"></textarea></div>
+    <div class="fg"><label class="fl">Algo específico que quer que eu analise na consulta?</label><textarea id="espec" placeholder="Ex: dívida no cartão, fundo X, seguro de vida, etc."></textarea></div>
+    <div class="nav"><button class="btn-b" onclick="ir(5,4)">← Voltar</button><button class="btn-n" onclick="verDiag()">Ver diagnóstico ✦</button></div>
+  </div>
+
+  <!-- S6 -->
+  <div class="step" id="s6">
+    <div class="lbl">Diagnóstico gerado</div>
+    <div class="ttl">Seu perfil financeiro</div>
+    <div class="sub">Com base nas suas respostas, aqui está o resumo do seu momento.</div>
+    <div id="d-badge"></div>
+    <div class="sg" id="d-grid"></div>
+    <div class="rc-card" id="d-recs"></div>
+    <div class="info"><strong>Próximo passo:</strong> Com essas informações, nossa conversa já tem um ponto de partida claro. Confirme abaixo e te vejo na consulta!</div>
+    <div class="err" id="err">Erro ao enviar. Verifique sua conexão e tente novamente.</div>
+    <button class="btn-ok" id="btn-ok" onclick="enviar()"><span id="btn-txt">Confirmar e enviar ✓</span></button>
+    <div style="margin-top:12px;text-align:center"><button class="btn-b" onclick="ir(6,5)" style="margin:0 auto">← Revisar respostas</button></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- SUCCESS -->
+<div class="suc" id="suc">
+  <div class="suc-ic">✓</div>
+  <div style="font-weight:900;font-size:24px;margin-bottom:10px">Formulário enviado!</div>
+  <div style="font-size:14px;color:#888;max-width:360px;margin:0 auto 22px;line-height:1.6">Recebi suas informações e já estou me preparando para a nossa consulta. Fique de olho no seu WhatsApp!</div>
+  <span class="pill">✦ Bright Minds</span><span class="pill">Consulta confirmada</span>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app = initializeApp({
+  apiKey:"AIzaSyCfchNwF82NXxOUhIO39ya2MDLj2OGjfuI",
+  authDomain:"mentoria-brightminds.firebaseapp.com",
+  projectId:"mentoria-brightminds",
+  storageBucket:"mentoria-brightminds.firebasestorage.app",
+  messagingSenderId:"1029569202282",
+  appId:"1:1029569202282:web:840bc5ea59b1adefd92213"
+});
+const db = getFirestore(app);
+window._save = async (d) => {
+  const ref = await addDoc(collection(db,"consultas"), {...d, criadoEm: serverTimestamp()});
+  return ref.id;
+};
+</script>
+
+<script>
+// Estado
+const S = {};
+
+function ir(de, para) {
+  document.getElementById('s'+de).classList.remove('on');
+  document.getElementById('s'+para).classList.add('on');
+  document.getElementById('prog').style.width = Math.min(Math.round(para/5*100),100)+'%';
+  window.scrollTo(0,0);
+}
+
+function pick(el, grupoId, chave, valor) {
+  document.getElementById(grupoId).querySelectorAll('.rc').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  S[chave] = valor;
+}
+
+// Checkboxes — usa event listener nativo
+document.querySelectorAll('.cc').forEach(label => {
+  label.addEventListener('click', function() {
+    const cb = this.querySelector('input[type=checkbox]');
+    cb.checked = !cb.checked;
+    this.querySelector('.cb').style.background = cb.checked ? '#FFD700' : '';
+    this.querySelector('.cb').style.borderColor = cb.checked ? '#FFD700' : '';
+    if (cb.checked) {
+      this.querySelector('.cb').innerHTML = '<span style="font-size:10px;font-weight:900;color:#0D0D0D">✓</span>';
+    } else {
+      this.querySelector('.cb').innerHTML = '';
+    }
+  });
+});
+
+function getChecks(grupoSel) {
+  return Array.from(document.querySelectorAll(grupoSel+' input:checked')).map(i => i.value);
+}
+function v(id) { return document.getElementById(id).value.trim(); }
+
+// Labels
+const LBL = {
+  perf: {iniciante:'Iniciante',construindo:'Em construção',investidor:'Investidor ativo',perdido:'Alto potencial bloqueado'},
+  inv:  {sim_xp:'Sim — XP/assessoria',sim_outros:'Sim — outros bancos',poupanca:'Só poupança',nao:'Não investe'},
+  renda:{ate3k:'Até R$ 3k','3a7k':'R$ 3k–7k','7a15k':'R$ 7k–15k','15a30k':'R$ 15k–30k',acima30k:'Acima de R$ 30k',nd:'Não informado'},
+  pat:  {negativo:'Endividado',zerado:'Zerado',ate50k:'Até R$ 50k','50a300k':'R$ 50k–300k',acima300k:'Acima de R$ 300k'},
+  obj:  {independencia:'Liberdade financeira',imovel:'Comprar imóvel',renda_passiva:'Renda passiva',negocio:'Negócio próprio',qualidade_vida:'Qualidade de vida',estabilidade:'Segurança'},
+};
+
+function badge() {
+  const p = S.perf, i = S.inv;
+  if (p==='investidor'||i==='sim_xp') return {label:'Investidor',cor:'#00BFFF',desc:'Foco em otimização de carteira e crescimento patrimonial.'};
+  if (i==='sim_outros') return {label:'Investidor em transição',cor:'#7B5EA7',desc:'Já investe, mas pode estar perdendo com produtos inferiores.'};
+  if (p==='construindo'||i==='poupanca') return {label:'Em construção',cor:'#F07030',desc:'Está formando base — precisa de estrutura e primeiros passos concretos.'};
+  if (p==='perdido') return {label:'Alto potencial bloqueado',cor:'#FF2050',desc:'Boa renda mas sem organização. Foco em hábitos e controle de fluxo.'};
+  return {label:'Iniciante',cor:'#00E060',desc:'Ponto de partida — oportunidade de começar certo desde o início.'};
+}
+
+function recs() {
+  const r=[], p=S.perf, i=S.inv, o=S.obj;
+  if (i==='sim_xp')     { r.push('Revisar carteira atual: diversificação, custos e aderência ao objetivo.'); r.push('Avaliar oportunidades para acelerar crescimento dentro do perfil de risco.'); }
+  else if (i==='sim_outros') { r.push('Comparar produtos e custos — pode haver alternativas muito melhores.'); r.push('Avaliar centralização ou diversificação de custódia.'); }
+  else if (i==='poupanca')   { r.push('Poupança perde da inflação — apresentar alternativas simples de renda fixa.'); r.push('Construir o primeiro portfólio em 3 passos práticos.'); }
+  else                       { r.push('Criar reserva de emergência: o primeiro passo inegociável.'); r.push('Montar plano financeiro pessoal do zero.'); }
+  if (o==='independencia'||o==='renda_passiva') r.push('Apresentar a lógica de acumulação de longo prazo e composição de renda passiva.');
+  if (p==='perdido') r.push('Trabalhar controle de fluxo de caixa — identificar onde o dinheiro some.');
+  r.push('Apresentar a Mentoria Bright Minds como acompanhamento contínuo para executar o plano.');
+  return r;
+}
+
+function verDiag() {
+  const b = badge();
+  document.getElementById('d-badge').innerHTML =
+    `<div class="badge" style="background:${b.cor};color:#0D0D0D">${b.label}</div>
+     <p style="font-size:13px;color:#999;margin-bottom:4px;line-height:1.5">${b.desc}</p>`;
+  document.getElementById('d-grid').innerHTML = [
+    ['Investimentos', LBL.inv[S.inv]||'—'],
+    ['Renda', LBL.renda[S.renda]||'—'],
+    ['Patrimônio', LBL.pat[S.pat]||'—'],
+    ['Objetivo', LBL.obj[S.obj]||'—'],
+  ].map(([l,v])=>`<div class="si"><div class="si-l">${l}</div><div class="si-v">${v}</div></div>`).join('');
+  document.getElementById('d-recs').innerHTML =
+    '<h4>Foco sugerido para a consulta</h4>'+
+    recs().map(r=>`<div class="ri"><span class="dot">›</span><p>${r}</p></div>`).join('');
+  ir(5,6);
+  document.getElementById('prog').style.width='100%';
+}
+
+async function enviar() {
+  const btn = document.getElementById('btn-ok');
+  const txt = document.getElementById('btn-txt');
+  const err = document.getElementById('err');
+  err.classList.remove('on');
+  btn.disabled = true;
+  txt.innerHTML = '<span class="spin"></span> Enviando…';
+  const b = badge();
+  const dados = {
+    nome: v('nome'), telefone: v('fone'), email: v('email'),
+    cidade: v('cidade'), profissao: v('prof'),
+    perfil: S.perf||null, investimentos: S.inv||null,
+    dificuldades: getChecks('#s2 .cg'),
+    renda: S.renda||null, patrimonio: S.pat||null,
+    objetivo: S.obj||null, prazo: S.prazo||null,
+    tentativa: v('tentativa'),
+    expectativas: getChecks('#s5 .cg'),
+    estilo: S.estilo||null,
+    preocupacao: v('preoc'), especifico: v('espec'),
+    perfil_calculado: b.label,
+    origem: 'bonus_2a_temporada',
+  };
+  try {
+    await window._save(dados);
+    document.querySelector('.wrap').style.display='none';
+    document.getElementById('suc').classList.add('on');
+    document.getElementById('prog').style.width='100%';
+    window.scrollTo(0,0);
+  } catch(e) {
+    err.textContent = 'Erro: '+(e.message||'tente novamente.');
+    err.classList.add('on');
+    btn.disabled=false;
+    txt.textContent='Tentar novamente';
+  }
+}
+
+window.ir=ir; window.pick=pick; window.verDiag=verDiag; window.enviar=enviar;
+</script>
+</body>
+</html>

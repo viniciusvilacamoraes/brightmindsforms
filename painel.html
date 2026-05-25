@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Minds — Painel do Mentor</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--y:#FFD700;--b:#0D0D0D;--font:'Barlow',Arial,sans-serif}
+body{font-family:var(--font);background:#f5f3ee;color:var(--b);min-height:100vh}
+.hd{background:var(--b);padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+.hd-left{display:flex;align-items:center;gap:12px}
+.hd-logo{width:36px;height:36px;background:var(--y);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.hd-logo svg{width:18px;height:18px}
+.hd-brand{font-weight:900;font-size:16px;color:var(--y);line-height:1}
+.hd-sub{font-size:11px;color:#888;margin-top:1px}
+.hd-badge{background:#1a1a1a;border:1px solid #333;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:#aaa}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:#fff;border-radius:10px;padding:16px 18px;border:1px solid #e8e3da}
+.kpi.hl{background:var(--y);border-color:var(--y)}
+.kpi-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:4px}
+.kpi.hl .kpi-l{color:#7a6000}
+.kpi-v{font-size:22px;font-weight:900;color:var(--b)}
+/* FILTROS */
+.filtros{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.fil{background:#fff;border:1.5px solid #e8e3da;border-radius:8px;padding:8px 14px;font-family:var(--font);font-size:13px;font-weight:600;color:#444;cursor:pointer;transition:all .2s}
+.fil:hover,.fil.on{background:var(--b);border-color:var(--b);color:var(--y)}
+select.sel{background:#fff;border:1.5px solid #e8e3da;border-radius:8px;padding:8px 14px;font-family:var(--font);font-size:13px;font-weight:600;color:#444;cursor:pointer;outline:none}
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:#fff;border-radius:12px;border:1px solid #e8e3da;padding:18px;cursor:pointer;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);transform:translateY(-2px)}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-nome{font-weight:900;font-size:15px;color:var(--b)}
+.card-badge{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap}
+.card-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.ci{background:#f5f3ee;border-radius:6px;padding:8px 10px}
+.ci-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:2px}
+.ci-v{font-size:12px;font-weight:700;color:var(--b)}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag{font-size:11px;font-weight:600;background:#f0ede6;border-radius:20px;padding:3px 9px;color:#555}
+.card-foco{background:#fffbe6;border-left:3px solid var(--y);border-radius:0 6px 6px 0;padding:8px 10px;font-size:12px;color:#555;line-height:1.4}
+.card-data{font-size:11px;color:#bbb;margin-top:10px}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:28px}
+.modal-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.modal-nome{font-weight:900;font-size:20px;color:var(--b)}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#999;padding:0 4px}
+.m-sec{margin-bottom:18px}
+.m-sec-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ede6}
+.m-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f8f6f2;font-size:13px}
+.m-row:last-child{border-bottom:none}
+.m-lbl{color:#888;font-weight:500}
+.m-val{font-weight:700;color:var(--b);text-align:right;max-width:60%}
+.m-texto{background:#f5f3ee;border-radius:8px;padding:12px;font-size:13px;color:#444;line-height:1.6;margin-top:6px;font-style:italic}
+.m-recs{background:#fffbe6;border:1.5px solid var(--y);border-radius:10px;padding:16px}
+.m-recs h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a6000;margin-bottom:10px}
+.m-rec-item{display:flex;gap:8px;margin-bottom:8px;font-size:13px;color:#555;line-height:1.5}
+.m-rec-item span{color:var(--y);font-size:16px;flex-shrink:0;margin-top:-1px}
+/* LOADING */
+.loading{text-align:center;padding:60px;color:#aaa;font-size:14px}
+.spin{display:inline-block;width:24px;height:24px;border:2px solid #ddd;border-top-color:var(--y);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:60px;color:#aaa}
+@media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-left">
+    <div class="hd-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.4-1.3 4.5-3 5.7V17H9v-2.3C7.3 13.5 6 11.4 6 9a6 6 0 0 1 6-6z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hd-brand">BRIGHT MINDS</div>
+      <div class="hd-sub">Painel do Mentor · Consultas individuais</div>
+    </div>
+  </div>
+  <div class="hd-badge" id="hd-count">Carregando…</div>
+</div>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi hl"><div class="kpi-l">Total de respostas</div><div class="kpi-v" id="k-total">—</div></div>
+    <div class="kpi"><div class="kpi-l">Investidores</div><div class="kpi-v" id="k-inv">—</div></div>
+    <div class="kpi"><div class="kpi-l">Não investem ainda</div><div class="kpi-v" id="k-ninv">—</div></div>
+    <div class="kpi"><div class="kpi-l">Querem acompanhamento</div><div class="kpi-v" id="k-acomp">—</div></div>
+  </div>
+
+  <div class="filtros">
+    <button class="fil on" onclick="filtrar('todos',this)">Todos</button>
+    <button class="fil" onclick="filtrar('Investidor',this)">Investidores</button>
+    <button class="fil" onclick="filtrar('Em construção',this)">Em construção</button>
+    <button class="fil" onclick="filtrar('Iniciante',this)">Iniciantes</button>
+    <button class="fil" onclick="filtrar('Alto potencial bloqueado',this)">Alto potencial</button>
+    <select class="sel" id="ord" onchange="ordenar()">
+      <option value="novo">Mais recentes primeiro</option>
+      <option value="antigo">Mais antigos primeiro</option>
+      <option value="nome">Nome A–Z</option>
+    </select>
+  </div>
+
+  <div id="area-cards">
+    <div class="loading"><div class="spin"></div><br>Carregando consultas…</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="fecharModal(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyCfchNwF82NXxOUhIO39ya2MDLj2OGjfuI",
+  authDomain:"mentoria-brightminds.firebaseapp.com",
+  projectId:"mentoria-brightminds",
+  storageBucket:"mentoria-brightminds.firebasestorage.app",
+  messagingSenderId:"1029569202282",
+  appId:"1:1029569202282:web:840bc5ea59b1adefd92213"
+});
+const db = getFirestore(app);
+
+let TODOS = [];
+let FILTRO = 'todos';
+
+const LBL = {
+  inv:  {sim_xp:'XP / assessoria',sim_outros:'Outros bancos',poupanca:'Só poupança',nao:'Não investe'},
+  renda:{ate3k:'Até R$ 3k','3a7k':'R$ 3k–7k','7a15k':'R$ 7k–15k','15a30k':'R$ 15k–30k',acima30k:'Acima R$ 30k',nd:'—'},
+  pat:  {negativo:'Endividado',zerado:'Zerado',ate50k:'Até R$ 50k','50a300k':'R$ 50k–300k',acima300k:'Acima R$ 300k'},
+  obj:  {independencia:'Liberdade financeira',imovel:'Comprar imóvel',renda_passiva:'Renda passiva',negocio:'Negócio próprio',qualidade_vida:'Qualidade de vida',estabilidade:'Segurança'},
+  prazo:{['6m']:'6 meses',['1a']:'1 ano',['3a']:'2–3 anos',longo:'Longo prazo'},
+  estilo:{pratico:'Prático e direto',entender:'Quer entender o porquê',acompanhado:'Precisa de acompanhamento'},
+  perf: {iniciante:'Iniciante',construindo:'Em construção',investidor:'Investidor ativo',perdido:'Alto potencial bloqueado'},
+};
+
+const BADGE_COR = {
+  'Investidor':'#00BFFF','Investidor em transição':'#7B5EA7',
+  'Em construção':'#F07030','Alto potencial bloqueado':'#FF2050','Iniciante':'#00E060'
+};
+
+function badgeCor(label) { return BADGE_COR[label]||'#999'; }
+
+function fmtData(ts) {
+  if (!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function recs(d) {
+  const r=[], p=d.perfil, i=d.investimentos, o=d.objetivo;
+  if (i==='sim_xp')     { r.push('Revisar carteira: diversificação, custos e aderência ao objetivo.'); r.push('Avaliar oportunidades para acelerar crescimento.'); }
+  else if (i==='sim_outros') { r.push('Comparar produtos e custos — alternativas melhores disponíveis.'); r.push('Avaliar centralização ou diversificação de custódia.'); }
+  else if (i==='poupanca')   { r.push('Poupança perde da inflação — apresentar renda fixa simples e segura.'); r.push('Construir o primeiro portfólio em 3 passos.'); }
+  else                       { r.push('Criar reserva de emergência: passo inegociável.'); r.push('Montar plano financeiro pessoal do zero.'); }
+  if (o==='independencia'||o==='renda_passiva') r.push('Mostrar a lógica de acumulação e composição de renda passiva.');
+  if (p==='perdido') r.push('Controle de fluxo de caixa — identificar onde o dinheiro some.');
+  r.push('Apresentar a Mentoria Bright Minds como acompanhamento contínuo.');
+  return r;
+}
+
+function renderCards(lista) {
+  const area = document.getElementById('area-cards');
+  if (!lista.length) { area.innerHTML='<div class="empty">Nenhuma resposta encontrada.</div>'; return; }
+  area.innerHTML = '<div class="cards">'+lista.map((d,i)=>{
+    const cor = badgeCor(d.perfil_calculado);
+    const tags = (d.dificuldades||[]).slice(0,3).map(t=>`<span class="tag">${t.replace('_',' ')}</span>`).join('');
+    const focoRec = recs(d)[0]||'';
+    return `<div class="card" onclick="abrirModal(${i})">
+      <div class="card-top">
+        <div class="card-nome">${d.nome||'Sem nome'}</div>
+        <div class="card-badge" style="background:${cor}22;color:${cor}">${d.perfil_calculado||'—'}</div>
+      </div>
+      <div class="card-info">
+        <div class="ci"><div class="ci-l">Investimentos</div><div class="ci-v">${LBL.inv[d.investimentos]||'—'}</div></div>
+        <div class="ci"><div class="ci-l">Patrimônio</div><div class="ci-v">${LBL.pat[d.patrimonio]||'—'}</div></div>
+        <div class="ci"><div class="ci-l">Renda</div><div class="ci-v">${LBL.renda[d.renda]||'—'}</div></div>
+        <div class="ci"><div class="ci-l">Objetivo</div><div class="ci-v">${LBL.obj[d.objetivo]||'—'}</div></div>
+      </div>
+      ${tags?`<div class="card-tags">${tags}</div>`:''}
+      <div class="card-foco">› ${focoRec}</div>
+      <div class="card-data">${fmtData(d.criadoEm)}</div>
+    </div>`;
+  }).join('')+'</div>';
+  // Guarda índice para o modal
+  window._lista = lista;
+}
+
+window.abrirModal = function(idx) {
+  const d = window._lista[idx];
+  const cor = badgeCor(d.perfil_calculado);
+  const rs = recs(d);
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-hd">
+      <div>
+        <div class="modal-nome">${d.nome||'—'}</div>
+        <div style="margin-top:6px"><span style="background:${cor}22;color:${cor};font-size:12px;font-weight:700;border-radius:20px;padding:3px 10px">${d.perfil_calculado||'—'}</span></div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="m-sec">
+      <div class="m-sec-t">Contato</div>
+      <div class="m-row"><span class="m-lbl">WhatsApp</span><span class="m-val">${d.telefone||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">E-mail</span><span class="m-val">${d.email||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Cidade</span><span class="m-val">${d.cidade||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Profissão</span><span class="m-val">${d.profissao||'—'}</span></div>
+    </div>
+    <div class="m-sec">
+      <div class="m-sec-t">Situação financeira</div>
+      <div class="m-row"><span class="m-lbl">Perfil</span><span class="m-val">${LBL.perf[d.perfil]||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Investimentos</span><span class="m-val">${LBL.inv[d.investimentos]||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Renda</span><span class="m-val">${LBL.renda[d.renda]||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Patrimônio</span><span class="m-val">${LBL.pat[d.patrimonio]||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Dificuldades</span><span class="m-val">${(d.dificuldades||[]).join(', ')||'—'}</span></div>
+    </div>
+    <div class="m-sec">
+      <div class="m-sec-t">Objetivos</div>
+      <div class="m-row"><span class="m-lbl">Sonho financeiro</span><span class="m-val">${LBL.obj[d.objetivo]||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Prazo</span><span class="m-val">${LBL.prazo[d.prazo]||'—'}</span></div>
+      ${d.tentativa?`<div style="margin-top:8px"><div class="m-lbl" style="font-size:11px">Tentativas anteriores</div><div class="m-texto">"${d.tentativa}"</div></div>`:''}
+    </div>
+    <div class="m-sec">
+      <div class="m-sec-t">Para a consulta</div>
+      <div class="m-row"><span class="m-lbl">Expectativas</span><span class="m-val">${(d.expectativas||[]).join(', ')||'—'}</span></div>
+      <div class="m-row"><span class="m-lbl">Estilo</span><span class="m-val">${LBL.estilo[d.estilo]||'—'}</span></div>
+      ${d.preocupacao?`<div style="margin-top:8px"><div class="m-lbl" style="font-size:11px">Maior preocupação</div><div class="m-texto">"${d.preocupacao}"</div></div>`:''}
+      ${d.especifico?`<div style="margin-top:8px"><div class="m-lbl" style="font-size:11px">Pedido específico</div><div class="m-texto">"${d.especifico}"</div></div>`:''}
+    </div>
+    <div class="m-recs">
+      <h4>Foco sugerido para esta consulta</h4>
+      ${rs.map(r=>`<div class="m-rec-item"><span>›</span>${r}</div>`).join('')}
+    </div>
+    <div style="font-size:11px;color:#bbb;margin-top:14px;text-align:right">${fmtData(d.criadoEm)}</div>
+  `;
+  document.getElementById('overlay').classList.add('on');
+};
+
+window.fecharModal = function(e) {
+  if (!e || e.target===document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('on');
+  }
+};
+
+window.filtrar = function(val, btn) {
+  FILTRO = val;
+  document.querySelectorAll('.fil').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  aplicar();
+};
+
+window.ordenar = function() { aplicar(); };
+
+function aplicar() {
+  let lista = FILTRO==='todos' ? [...TODOS] : TODOS.filter(d=>(d.perfil_calculado||'').includes(FILTRO));
+  const ord = document.getElementById('ord').value;
+  if (ord==='novo') lista.sort((a,b)=>{ const ta=a.criadoEm?.seconds||0, tb=b.criadoEm?.seconds||0; return tb-ta; });
+  else if (ord==='antigo') lista.sort((a,b)=>{ const ta=a.criadoEm?.seconds||0, tb=b.criadoEm?.seconds||0; return ta-tb; });
+  else lista.sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
+  renderCards(lista);
+}
+
+// KPIs
+function calcKpis(lista) {
+  document.getElementById('k-total').textContent = lista.length;
+  document.getElementById('k-inv').textContent = lista.filter(d=>d.investimentos==='sim_xp'||d.investimentos==='sim_outros'||d.perfil_calculado==='Investidor'||d.perfil_calculado==='Investidor em transição').length;
+  document.getElementById('k-ninv').textContent = lista.filter(d=>d.investimentos==='nao'||d.investimentos==='poupanca').length;
+  document.getElementById('k-acomp').textContent = lista.filter(d=>(d.expectativas||[]).includes('acompanhamento')||d.estilo==='acompanhado').length;
+  document.getElementById('hd-count').textContent = lista.length + ' respostas';
+}
+
+// Load
+async function carregar() {
+  try {
+    const q = query(collection(db,'consultas'), orderBy('criadoEm','desc'));
+    const snap = await getDocs(q);
+    TODOS = snap.docs.map(doc=>({id:doc.id,...doc.data()}));
+    calcKpis(TODOS);
+    aplicar();
+  } catch(e) {
+    document.getElementById('area-cards').innerHTML =
+      `<div class="empty">Erro ao carregar: ${e.message}<br><br>Verifique se as regras do Firestore permitem leitura ou se você está logado.</div>`;
+  }
+}
+
+carregar();
+</script>
+</body>
+</html>
