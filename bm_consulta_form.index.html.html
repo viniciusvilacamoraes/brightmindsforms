@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Minds — Diagnóstico Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --yellow:#FFD700;--black:#0D0D0D;--white:#FFFFFF;--bg:#F0EDE6;
+  --ink:#333;--muted:#888;--border:#2A2A2A;--card:#1A1A1A;
+  --font:'Barlow',Arial,sans-serif;
+}
+body{font-family:var(--font);background:var(--black);color:var(--white);min-height:100vh}
+
+/* HEADER */
+.hd{background:var(--yellow);padding:22px 28px;display:flex;align-items:center;gap:14px}
+.hd-logo{width:40px;height:40px;background:var(--black);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.hd-logo svg{width:22px;height:22px}
+.hd-brand{font-weight:900;font-size:18px;color:var(--black);letter-spacing:-.3px;line-height:1}
+.hd-sub{font-size:12px;color:var(--black);opacity:.65;font-weight:500;margin-top:2px}
+
+/* PROGRESS */
+.prog-bar{height:3px;background:#222;width:100%}
+.prog-fill{height:3px;background:var(--yellow);transition:width .4s ease}
+
+/* BODY */
+.body{max-width:620px;margin:0 auto;padding:32px 20px 60px}
+
+/* STEP */
+.step{display:none}.step.active{display:block}
+.step-label{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--yellow);text-transform:uppercase;margin-bottom:6px}
+.step-title{font-weight:900;font-size:26px;color:#fff;line-height:1.2;margin-bottom:6px}
+.step-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.5}
+
+/* FIELDS */
+.fg{margin-bottom:20px}
+.fl{display:block;font-size:12px;font-weight:700;color:#ccc;margin-bottom:7px;letter-spacing:.2px}
+.fl .req{color:var(--yellow);margin-left:2px}
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;background:#1A1A1A;border:1.5px solid #2A2A2A;border-radius:8px;
+  padding:13px 16px;font-family:var(--font);font-size:15px;color:#fff;outline:none;transition:border-color .2s
+}
+input:focus,select:focus,textarea:focus{border-color:var(--yellow)}
+select option{background:#1A1A1A;color:#fff}
+textarea{resize:vertical;min-height:88px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* RADIO CARDS */
+.rg{display:grid;gap:9px}.rg.c2{grid-template-columns:1fr 1fr}.rg.c1{grid-template-columns:1fr}
+.rc{background:#1A1A1A;border:1.5px solid #2A2A2A;border-radius:10px;padding:13px 15px;
+    cursor:pointer;display:flex;align-items:flex-start;gap:11px;transition:border-color .2s,background .2s;user-select:none}
+.rc:hover{border-color:var(--yellow);background:#1F1F1F}
+.rc.sel{border-color:var(--yellow);background:#1F1A00}
+.rc input{display:none}
+.rb{width:17px;height:17px;border-radius:50%;border:2px solid #444;flex-shrink:0;margin-top:3px;
+    display:flex;align-items:center;justify-content:center;transition:all .2s}
+.rc.sel .rb{border-color:var(--yellow);background:var(--yellow)}
+.rc.sel .rb::after{content:'';width:6px;height:6px;background:var(--black);border-radius:50%}
+.rc-t strong{display:block;font-size:14px;font-weight:700;color:#fff;margin-bottom:1px}
+.rc-t span{font-size:12px;color:var(--muted);line-height:1.4}
+
+/* CHECKBOX CARDS */
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cc{background:#1A1A1A;border:1.5px solid #2A2A2A;border-radius:10px;padding:12px 14px;
+    cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .2s,background .2s;user-select:none}
+.cc:hover{border-color:var(--yellow)}
+.cc.chk{border-color:var(--yellow);background:#1F1A00}
+.cc input{display:none}
+.cb{width:17px;height:17px;border-radius:4px;border:2px solid #444;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cc.chk .cb{background:var(--yellow);border-color:var(--yellow)}
+.cc.chk .cb::after{content:'✓';font-size:11px;font-weight:900;color:var(--black)}
+.cc-l{font-size:13px;font-weight:500;color:#ddd;line-height:1.3}
+
+/* DIVIDER */
+hr.dv{border:none;border-top:1px solid #222;margin:22px 0}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--yellow);margin-bottom:13px}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:34px;gap:12px}
+.btn-back{background:transparent;border:1.5px solid #333;border-radius:8px;padding:13px 20px;
+  font-family:var(--font);font-size:14px;font-weight:700;color:#888;cursor:pointer;transition:all .2s}
+.btn-back:hover{border-color:#666;color:#ccc}
+.btn-next{background:var(--yellow);border:none;border-radius:8px;padding:14px 28px;
+  font-family:var(--font);font-size:15px;font-weight:900;color:var(--black);cursor:pointer;
+  transition:all .2s;flex:1;max-width:260px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-next:hover{background:#FFE033}.btn-next:active{transform:scale(.98)}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+
+/* SUMMARY */
+.perfil-badge{display:inline-flex;align-items:center;gap:8px;font-weight:900;font-size:17px;
+  border-radius:8px;padding:10px 18px;margin:10px 0 16px}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.sum-item{background:#1A1A1A;border-radius:8px;padding:13px;border:1px solid #222}
+.sum-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#555;margin-bottom:3px}
+.sum-val{font-size:14px;font-weight:700;color:#fff}
+.rec-card{background:#1F1A00;border:1.5px solid var(--yellow);border-radius:10px;padding:18px;margin:18px 0}
+.rec-card h4{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:11px}
+.rec-item{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px}
+.rec-item .icon{color:var(--yellow);font-size:16px;flex-shrink:0;margin-top:1px}
+.rec-item p{font-size:13px;color:#ccc;line-height:1.5}
+.info-card{background:#1A1A1A;border:1px solid #222;border-left:3px solid var(--yellow);
+  border-radius:8px;padding:13px 15px;margin-bottom:20px;font-size:13px;color:#aaa;line-height:1.5}
+.info-card strong{color:var(--yellow)}
+
+/* SUBMIT */
+.btn-submit{width:100%;background:var(--yellow);border:none;border-radius:8px;padding:16px;
+  font-family:var(--font);font-size:16px;font-weight:900;color:var(--black);cursor:pointer;
+  margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.btn-submit:hover{background:#FFE033}.btn-submit:disabled{opacity:.4;cursor:not-allowed}
+
+/* SUCCESS */
+.success{display:none;text-align:center;padding:48px 20px}
+.success.vis{display:block}
+.suc-icon{width:72px;height:72px;background:var(--yellow);border-radius:50%;display:flex;
+  align-items:center;justify-content:center;margin:0 auto 22px;font-size:32px}
+.tag-pill{display:inline-block;background:#252500;border:1px solid var(--yellow);color:var(--yellow);
+  font-size:12px;font-weight:700;border-radius:20px;padding:4px 12px;margin:3px}
+
+/* SPINNER */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--black);
+  border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ERROR */
+.err-msg{background:#300;border:1px solid #a00;border-radius:8px;padding:12px 15px;
+  font-size:13px;color:#ff9999;margin-top:14px;display:none}
+.err-msg.vis{display:block}
+
+@media(max-width:500px){
+  .two-col,.rg.c2,.cg{grid-template-columns:1fr}
+  .sum-grid{grid-template-columns:1fr}
+  .step-title{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hd">
+  <div class="hd-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.4-1.3 4.5-3 5.7V17H9v-2.3C7.3 13.5 6 11.4 6 9a6 6 0 0 1 6-6z"/>
+    </svg>
+  </div>
+  <div>
+    <div class="hd-brand">BRIGHT MINDS</div>
+    <div class="hd-sub">Diagnóstico financeiro — consulta individual</div>
+  </div>
+</div>
+<div class="prog-bar"><div class="prog-fill" id="prog" style="width:20%"></div></div>
+
+<div class="body">
+
+  <!-- STEP 1 — Identificação -->
+  <div class="step active" id="s1">
+    <div class="step-label">Etapa 1 de 5</div>
+    <div class="step-title">Vamos nos conhecer</div>
+    <div class="step-sub">Informações básicas para eu me preparar para o nosso encontro.</div>
+
+    <div class="two-col">
+      <div class="fg">
+        <label class="fl">Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Seu nome">
+      </div>
+      <div class="fg">
+        <label class="fl">WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="telefone" placeholder="(11) 99999-9999">
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">E-mail <span class="req">*</span></label>
+      <input type="email" id="email" placeholder="seu@email.com">
+    </div>
+    <div class="fg">
+      <label class="fl">Cidade e Estado</label>
+      <input type="text" id="cidade" placeholder="Ex: São Paulo - SP">
+    </div>
+    <div class="fg">
+      <label class="fl">Profissão / área de atuação</label>
+      <input type="text" id="profissao" placeholder="Ex: Médica, Engenheiro, Professora…">
+    </div>
+
+    <div class="nav">
+      <div></div>
+      <button class="btn-next" onclick="go(1,2)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 — Relação com o dinheiro -->
+  <div class="step" id="s2">
+    <div class="step-label">Etapa 2 de 5</div>
+    <div class="step-title">Sua relação com o dinheiro</div>
+    <div class="step-sub">Quero entender onde você está hoje para chegar preparado.</div>
+
+    <div class="fg">
+      <label class="fl">Como você se descreve financeiramente hoje? <span class="req">*</span></label>
+      <div class="rg c1" id="rg-perfil">
+        <label class="rc" onclick="pick(this,'rg-perfil')"><input type="radio" name="perfil" value="iniciante"><div class="rb"></div><div class="rc-t"><strong>Estou começando do zero</strong><span>Pouco ou nenhum conhecimento financeiro, ainda não invisto</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-perfil')"><input type="radio" name="perfil" value="construindo"><div class="rb"></div><div class="rc-t"><strong>Estou construindo minha base</strong><span>Já tenho alguma reserva, controlo o básico, mas quero evoluir</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-perfil')"><input type="radio" name="perfil" value="investidor"><div class="rb"></div><div class="rc-t"><strong>Já sou investidor ativo</strong><span>Tenho carteira montada e busco otimizar e crescer</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-perfil')"><input type="radio" name="perfil" value="perdido"><div class="rb"></div><div class="rc-t"><strong>Ganho bem mas não consigo guardar</strong><span>Renda ok, mas dinheiro some — preciso de organização</span></div></label>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Você tem investimentos atualmente?</label>
+      <div class="rg c2" id="rg-inv">
+        <label class="rc" onclick="pick(this,'rg-inv')"><input type="radio" name="inv" value="sim_xp"><div class="rb"></div><div class="rc-t"><strong>Sim, na XP / assessoria</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-inv')"><input type="radio" name="inv" value="sim_outros"><div class="rb"></div><div class="rc-t"><strong>Sim, em outros bancos</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-inv')"><input type="radio" name="inv" value="poupanca"><div class="rb"></div><div class="rc-t"><strong>Só poupança</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-inv')"><input type="radio" name="inv" value="nao"><div class="rb"></div><div class="rc-t"><strong>Não tenho investimentos</strong></div></label>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Maior dificuldade financeira hoje (pode marcar mais de uma)</label>
+      <div class="cg" id="cg-dif">
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="gastos"><span class="cc-l">Controlar os gastos</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="guardar"><span class="cc-l">Conseguir guardar dinheiro</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="onde_investir"><span class="cc-l">Saber onde investir</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="dividas"><span class="cc-l">Sair de dívidas</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="patrimonio"><span class="cc-l">Fazer o patrimônio crescer</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="independencia"><span class="cc-l">Alcançar independência financeira</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="protecao"><span class="cc-l">Proteção e planejamento familiar</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="entender"><span class="cc-l">Entender como funciona o mercado</span></label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="go(2,1)">← Voltar</button>
+      <button class="btn-next" onclick="go(2,3)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 — Situação atual -->
+  <div class="step" id="s3">
+    <div class="step-label">Etapa 3 de 5</div>
+    <div class="step-title">Sua situação hoje</div>
+    <div class="step-sub">Informações que me ajudam a calibrar bem a nossa conversa.</div>
+
+    <div class="fg">
+      <label class="fl">Renda mensal líquida</label>
+      <div class="rg c1" id="rg-renda">
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="ate3k"><div class="rb"></div><div class="rc-t"><strong>Até R$ 3.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="3a7k"><div class="rb"></div><div class="rc-t"><strong>R$ 3.000 a R$ 7.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="7a15k"><div class="rb"></div><div class="rc-t"><strong>R$ 7.000 a R$ 15.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="15a30k"><div class="rb"></div><div class="rc-t"><strong>R$ 15.000 a R$ 30.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="acima30k"><div class="rb"></div><div class="rc-t"><strong>Acima de R$ 30.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-renda')"><input type="radio" name="renda" value="nd"><div class="rb"></div><div class="rc-t"><strong>Prefiro não informar</strong></div></label>
+      </div>
+    </div>
+
+    <hr class="dv">
+
+    <div class="fg">
+      <label class="fl">Patrimônio investido / guardado hoje</label>
+      <div class="rg c1" id="rg-pat">
+        <label class="rc" onclick="pick(this,'rg-pat')"><input type="radio" name="pat" value="negativo"><div class="rb"></div><div class="rc-t"><strong>Estou endividado</strong><span>Dívidas superam o que tenho guardado</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-pat')"><input type="radio" name="pat" value="zerado"><div class="rb"></div><div class="rc-t"><strong>Zerado / praticamente zerado</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-pat')"><input type="radio" name="pat" value="ate50k"><div class="rb"></div><div class="rc-t"><strong>Até R$ 50.000 investidos</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-pat')"><input type="radio" name="pat" value="50a300k"><div class="rb"></div><div class="rc-t"><strong>R$ 50.000 a R$ 300.000</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-pat')"><input type="radio" name="pat" value="acima300k"><div class="rb"></div><div class="rc-t"><strong>Acima de R$ 300.000</strong></div></label>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="go(3,2)">← Voltar</button>
+      <button class="btn-next" onclick="go(3,4)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 — Objetivos -->
+  <div class="step" id="s4">
+    <div class="step-label">Etapa 4 de 5</div>
+    <div class="step-title">Objetivos e mentalidade</div>
+    <div class="step-sub">O que você quer construir e como você pensa sobre isso.</div>
+
+    <div class="fg">
+      <label class="fl">Seu maior sonho financeiro <span class="req">*</span></label>
+      <div class="rg c1" id="rg-obj">
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="independencia"><div class="rb"></div><div class="rc-t"><strong>Liberdade financeira / aposentadoria antecipada</strong><span>Não depender de salário para viver bem</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="imovel"><div class="rb"></div><div class="rc-t"><strong>Comprar imóvel / sair do aluguel</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="renda_passiva"><div class="rb"></div><div class="rc-t"><strong>Construir renda passiva</strong><span>Dinheiro trabalhando pra mim todo mês</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="negocio"><div class="rb"></div><div class="rc-t"><strong>Abrir / escalar meu negócio</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="qualidade_vida"><div class="rb"></div><div class="rc-t"><strong>Melhorar a qualidade de vida agora</strong><span>Viajar, educação, estilo de vida</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-obj')"><input type="radio" name="obj" value="estabilidade"><div class="rb"></div><div class="rc-t"><strong>Segurança e estabilidade</strong></div></label>
+      </div>
+    </div>
+
+    <hr class="dv">
+
+    <div class="fg">
+      <label class="fl">Em quanto tempo quer ver mudanças reais?</label>
+      <div class="rg c2" id="rg-prazo">
+        <label class="rc" onclick="pick(this,'rg-prazo')"><input type="radio" name="prazo" value="6m"><div class="rb"></div><div class="rc-t"><strong>Nos próximos 6 meses</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-prazo')"><input type="radio" name="prazo" value="1a"><div class="rb"></div><div class="rc-t"><strong>No próximo ano</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-prazo')"><input type="radio" name="prazo" value="3a"><div class="rb"></div><div class="rc-t"><strong>Em 2 a 3 anos</strong></div></label>
+        <label class="rc" onclick="pick(this,'rg-prazo')"><input type="radio" name="prazo" value="longo"><div class="rb"></div><div class="rc-t"><strong>Longo prazo (5+ anos)</strong></div></label>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Já tentou mudar sua vida financeira antes? O que aconteceu?</label>
+      <textarea id="tentativa" placeholder="Tentou cursos, planilhas, assessor? O que funcionou ou não?"></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="go(4,3)">← Voltar</button>
+      <button class="btn-next" onclick="go(4,5)">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5 — Para a consulta -->
+  <div class="step" id="s5">
+    <div class="step-label">Etapa 5 de 5</div>
+    <div class="step-title">Para a nossa conversa</div>
+    <div class="step-sub">Me ajude a deixar o nosso encontro ainda mais útil pra você.</div>
+
+    <div class="fg">
+      <label class="fl">O que você espera da consulta? <span class="req">*</span></label>
+      <div class="cg" id="cg-exp">
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="analisar_carteira"><span class="cc-l">Analisar minha carteira atual</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="plano_acao"><span class="cc-l">Ter um plano de ação claro</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="entender_opcoes"><span class="cc-l">Entender quais são minhas opções</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="motivacao"><span class="cc-l">Motivação para começar de vez</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="acompanhamento"><span class="cc-l">Ter acompanhamento contínuo</span></label>
+        <label class="cc" onclick="tog(this)"><div class="cb"></div><input type="checkbox" value="aprender"><span class="cc-l">Aprender a decidir sozinho</span></label>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Como prefere aprender e ser acompanhado?</label>
+      <div class="rg c1" id="rg-estilo">
+        <label class="rc" onclick="pick(this,'rg-estilo')"><input type="radio" name="estilo" value="pratico"><div class="rb"></div><div class="rc-t"><strong>Prático e direto</strong><span>Me diz o que fazer, prefiro ação rápida com orientação</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-estilo')"><input type="radio" name="estilo" value="entender"><div class="rb"></div><div class="rc-t"><strong>Quero entender o porquê</strong><span>Aprendo melhor quando compreendo a lógica por trás</span></div></label>
+        <label class="rc" onclick="pick(this,'rg-estilo')"><input type="radio" name="estilo" value="acompanhado"><div class="rb"></div><div class="rc-t"><strong>Preciso de acompanhamento</strong><span>Sei o que fazer, mas preciso de alguém ao lado para executar</span></div></label>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">O que mais te preocupa na sua vida financeira?</label>
+      <textarea id="preocupacao" placeholder="Fala à vontade. Quanto mais detalhe, mais eu consigo ajudar…"></textarea>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Tem algo específico que quer que eu analise ou responda na consulta?</label>
+      <textarea id="especifico" placeholder="Ex: tenho dívida no cartão, quero saber se vale continuar no fundo X, etc."></textarea>
+    </div>
+
+    <div class="nav">
+      <button class="btn-back" onclick="go(5,4)">← Voltar</button>
+      <button class="btn-next" onclick="showSummary()">Ver diagnóstico ✦</button>
+    </div>
+  </div>
+
+  <!-- STEP 6 — Diagnóstico + envio -->
+  <div class="step" id="s6">
+    <div class="step-label">Diagnóstico gerado</div>
+    <div class="step-title">Seu perfil financeiro</div>
+    <div class="step-sub">Com base nas suas respostas, aqui está o resumo do seu momento.</div>
+
+    <div id="sum-perfil"></div>
+    <div class="sum-grid" id="sum-grid"></div>
+    <div class="rec-card" id="sum-recs"></div>
+
+    <div class="info-card">
+      <strong>Próximo passo:</strong> Com essas informações, nossa conversa já tem um ponto de partida claro. Confirme abaixo e te vejo na consulta!
+    </div>
+
+    <div class="err-msg" id="err-msg">Erro ao enviar. Verifique sua conexão e tente novamente.</div>
+
+    <button class="btn-submit" id="btn-submit" onclick="submit()">
+      <span id="btn-txt">Confirmar e enviar</span>
+    </button>
+
+    <div style="margin-top:12px;text-align:center">
+      <button class="btn-back" onclick="go(6,5)" style="margin:0 auto">← Revisar respostas</button>
+    </div>
+  </div>
+
+</div><!-- /body -->
+
+<!-- SUCCESS -->
+<div class="success" id="success">
+  <div class="suc-icon">✓</div>
+  <div style="font-weight:900;font-size:26px;color:#fff;margin-bottom:10px">Formulário enviado!</div>
+  <div style="font-size:14px;color:var(--muted);max-width:380px;margin:0 auto 24px;line-height:1.6">
+    Recebi suas informações e já estou me preparando para a nossa consulta. Fique de olho no seu WhatsApp!
+  </div>
+  <span class="tag-pill">✦ Bright Minds</span>
+  <span class="tag-pill">Consulta confirmada</span>
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp }
+                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyCfchNwF82NXxOUhIO39ya2MDLj2OGjfuI",
+  authDomain:        "mentoria-brightminds.firebaseapp.com",
+  projectId:         "mentoria-brightminds",
+  storageBucket:     "mentoria-brightminds.firebasestorage.app",
+  messagingSenderId: "1029569202282",
+  appId:             "1:1029569202282:web:840bc5ea59b1adefd92213",
+  measurementId:     "G-JFCX11Y7NC"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// Expõe a função de salvar para o escopo global
+window._saveToFirestore = async (data) => {
+  const docRef = await addDoc(collection(db, "consultas"), {
+    ...data,
+    criadoEm: serverTimestamp()
+  });
+  return docRef.id;
+};
+</script>
+
+<!-- APP LOGIC -->
+<script>
+// ---------- UI helpers ----------
+function pick(el, groupId) {
+  document.getElementById(groupId).querySelectorAll('.rc').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function tog(el) { el.classList.toggle('chk'); }
+
+function go(from, to) {
+  document.getElementById('s'+from).classList.remove('active');
+  document.getElementById('s'+to).classList.add('active');
+  const pct = Math.round((to / 5) * 100);
+  document.getElementById('prog').style.width = Math.min(pct, 100) + '%';
+  window.scrollTo(0, 0);
+}
+
+// ---------- Read helpers ----------
+function radio(name) {
+  const el = document.querySelector('input[name="'+name+'"]:checked');
+  return el ? el.value : null;
+}
+function checks(groupId) {
+  return Array.from(
+    document.getElementById(groupId).querySelectorAll('.cc.chk input')
+  ).map(i => i.value);
+}
+function val(id) { return document.getElementById(id).value.trim(); }
+
+// ---------- Labels ----------
+const LBL = {
+  perfil:   { iniciante:'Iniciante', construindo:'Em construção', investidor:'Investidor ativo', perdido:'Alto potencial bloqueado' },
+  inv:      { sim_xp:'Sim — XP/assessoria', sim_outros:'Sim — outros bancos', poupanca:'Só poupança', nao:'Não investe' },
+  renda:    { ate3k:'Até R$ 3.000', '3a7k':'R$ 3k–7k', '7a15k':'R$ 7k–15k', '15a30k':'R$ 15k–30k', acima30k:'Acima de R$ 30k', nd:'Não informado' },
+  pat:      { negativo:'Endividado', zerado:'Zerado', ate50k:'Até R$ 50k', '50a300k':'R$ 50k–300k', acima300k:'Acima de R$ 300k' },
+  obj:      { independencia:'Liberdade financeira', imovel:'Comprar imóvel', renda_passiva:'Renda passiva', negocio:'Negócio próprio', qualidade_vida:'Qualidade de vida', estabilidade:'Segurança' },
+};
+
+function badgeConfig(perfil, inv) {
+  if (perfil === 'investidor' || inv === 'sim_xp')
+    return { label:'Investidor', bg:'#00BFFF', desc:'Foco em otimização de carteira e crescimento patrimonial.' };
+  if (inv === 'sim_outros')
+    return { label:'Investidor em transição', bg:'#7B5EA7', desc:'Já investe, mas pode estar deixando dinheiro na mesa com produtos inferiores.' };
+  if (perfil === 'construindo' || inv === 'poupanca')
+    return { label:'Em construção', bg:'#F07030', desc:'Está formando base — precisa de estrutura e primeiros passos concretos.' };
+  if (perfil === 'perdido')
+    return { label:'Alto potencial bloqueado', bg:'#FF2050', desc:'Boa renda mas sem organização. Foco em hábitos e controle de fluxo.' };
+  return { label:'Iniciante', bg:'#00E060', desc:'Ponto de partida — oportunidade de começar certo desde o início.' };
+}
+
+function recsFor(perfil, inv, obj) {
+  const r = [];
+  if (inv === 'sim_xp')    { r.push('Revisar carteira atual: diversificação, custos e aderência ao objetivo.'); r.push('Avaliar oportunidades para acelerar crescimento dentro do perfil de risco.'); }
+  else if (inv === 'sim_outros') { r.push('Comparar produtos e custos — pode haver alternativas muito melhores.'); r.push('Avaliar centralização ou diversificação de custódia.'); }
+  else if (inv === 'poupanca')   { r.push('Poupança perde da inflação — apresentar alternativas simples e seguras de renda fixa.'); r.push('Construir o primeiro portfólio em 3 passos práticos.'); }
+  else                            { r.push('Criar reserva de emergência: o primeiro passo inegociável.'); r.push('Montar plano financeiro pessoal do zero.'); }
+  if (obj === 'independencia' || obj === 'renda_passiva') r.push('Apresentar a lógica de acumulação de longo prazo e composição de renda passiva.');
+  if (perfil === 'perdido') r.push('Trabalhar controle de fluxo de caixa — identificar onde o dinheiro some.');
+  r.push('Apresentar a Mentoria Bright Minds como acompanhamento contínuo para executar o plano.');
+  return r;
+}
+
+// ---------- Summary ----------
+function showSummary() {
+  const perfil = radio('perfil'), inv = radio('inv'), renda = radio('renda'),
+        pat = radio('pat'), obj = radio('obj');
+
+  const bc = badgeConfig(perfil, inv);
+
+  document.getElementById('sum-perfil').innerHTML =
+    `<div class="perfil-badge" style="background:${bc.bg};color:#0D0D0D">${bc.label}</div>
+     <p style="font-size:14px;color:#aaa;margin-bottom:6px;line-height:1.5">${bc.desc}</p>`;
+
+  document.getElementById('sum-grid').innerHTML = [
+    ['Investimentos', LBL.inv[inv]||'—'],
+    ['Renda', LBL.renda[renda]||'—'],
+    ['Patrimônio', LBL.pat[pat]||'—'],
+    ['Objetivo', LBL.obj[obj]||'—'],
+  ].map(([l,v]) =>
+    `<div class="sum-item"><div class="sum-lbl">${l}</div><div class="sum-val">${v}</div></div>`
+  ).join('');
+
+  const recs = recsFor(perfil, inv, obj);
+  document.getElementById('sum-recs').innerHTML =
+    '<h4>Foco sugerido para a consulta</h4>' +
+    recs.map(r => `<div class="rec-item"><span class="icon">›</span><p>${r}</p></div>`).join('');
+
+  go(5, 6);
+  document.getElementById('prog').style.width = '100%';
+}
+
+// ---------- Submit ----------
+async function submit() {
+  const btn  = document.getElementById('btn-submit');
+  const txt  = document.getElementById('btn-txt');
+  const err  = document.getElementById('err-msg');
+  err.classList.remove('vis');
+  btn.disabled = true;
+  txt.innerHTML = '<span class="spinner"></span> Enviando…';
+
+  const data = {
+    // Identificação
+    nome:       val('nome'),
+    telefone:   val('telefone'),
+    email:      val('email'),
+    cidade:     val('cidade'),
+    profissao:  val('profissao'),
+    // Relação com dinheiro
+    perfil:       radio('perfil'),
+    investimentos: radio('inv'),
+    dificuldades:  checks('cg-dif'),
+    // Situação
+    renda:      radio('renda'),
+    patrimonio: radio('pat'),
+    // Objetivos
+    objetivo:   radio('obj'),
+    prazo:      radio('prazo'),
+    tentativa:  val('tentativa'),
+    // Para a consulta
+    expectativas: checks('cg-exp'),
+    estilo_aprendizado: radio('estilo'),
+    preocupacao: val('preocupacao'),
+    especifico:  val('especifico'),
+    // Meta
+    origem: 'bonus_2a_temporada',
+    perfil_calculado: badgeConfig(radio('perfil'), radio('inv')).label,
+  };
+
+  try {
+    const id = await window._saveToFirestore(data);
+    console.log('Salvo com ID:', id);
+    document.querySelector('.body').style.display = 'none';
+    document.getElementById('success').classList.add('vis');
+    document.getElementById('prog').style.width = '100%';
+    window.scrollTo(0, 0);
+  } catch(e) {
+    console.error(e);
+    err.textContent = 'Erro ao enviar: ' + (e.message || 'tente novamente.');
+    err.classList.add('vis');
+    btn.disabled = false;
+    txt.textContent = 'Tentar novamente';
+  }
+}
+
+// Expõe funções usadas pelo HTML inline
+window.go = go; window.pick = pick; window.tog = tog;
+window.showSummary = showSummary; window.submit = submit;
+</script>
+
+</body>
+</html>
