@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Minds — Cadastro da Escola</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent:#FFD700; --black:#0D0D0D; --white:#FFFFFF; --bg:#F7F7F7;
+    --text:#0D0D0D; --muted:#5A5A5A; --border:#D9D9D9;
+    --error:#FF2050; --success:#00C060; --r:8px; --font:'Barlow',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+  .header{background:var(--black);padding:18px 40px;display:flex;align-items:center;gap:14px;}
+  .logo-text{font-size:1.1rem;font-weight:900;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;}
+  .logo-sub{font-size:.68rem;color:rgba(255,215,0,.5);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+  .hero{background:var(--accent);padding:32px 40px 28px;border-bottom:4px solid var(--black);}
+  .hero-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(13,13,13,.5);margin-bottom:6px;}
+  .hero-title{font-size:1.9rem;font-weight:900;color:var(--black);line-height:1.1;margin-bottom:8px;}
+  .hero-sub{font-size:.9rem;color:rgba(13,13,13,.65);max-width:500px;line-height:1.5;font-weight:500;}
+  .hero-year{display:inline-block;background:var(--black);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-top:12px;}
+  .prog-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:0 40px;}
+  .prog-inner{display:flex;max-width:760px;margin:0 auto;}
+  .prog-step{flex:1;padding:13px 0;text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--border);border-bottom:3px solid var(--border);transition:all .2s;}
+  .prog-step.active{color:var(--black);border-bottom-color:var(--accent);}
+  .prog-step.done{color:var(--success);border-bottom-color:var(--success);}
+  .fc{max-width:760px;margin:32px auto;padding:0 24px 60px;}
+  .card{background:var(--white);border-radius:var(--r);border:1.5px solid var(--border);margin-bottom:22px;overflow:hidden;}
+  .card-hdr{background:var(--black);padding:13px 22px;display:flex;align-items:center;gap:10px;}
+  .card-num{background:var(--accent);color:var(--black);font-size:.7rem;font-weight:900;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .card-ttl{font-size:.82rem;font-weight:700;color:var(--white);letter-spacing:.06em;text-transform:uppercase;}
+  .card-body{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .card-body.one{grid-template-columns:1fr;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field.full{grid-column:1/-1;}
+  .fl{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .req{color:var(--accent);background:var(--black);font-size:.58rem;padding:1px 5px;border-radius:3px;font-weight:700;}
+  .opt{color:var(--muted);font-size:.62rem;font-weight:500;text-transform:none;letter-spacing:0;background:var(--bg);padding:1px 6px;border-radius:3px;}
+  input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{
+    font-family:var(--font);font-size:.92rem;font-weight:500;color:var(--text);
+    background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);
+    padding:9px 13px;transition:border-color .15s,box-shadow .15s;outline:none;width:100%;
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(255,215,0,.3);}
+  input.ok{border-color:var(--success);}
+  input.bad,select.bad{border-color:var(--error);}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230D0D0D' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer;}
+  textarea{resize:vertical;min-height:76px;}
+  .hint{font-size:.7rem;color:var(--muted);line-height:1.4;}
+  .ferr{font-size:.7rem;color:var(--error);font-weight:600;display:none;}
+  /* turma table */
+  .tt{width:100%;border-collapse:collapse;font-size:.86rem;}
+  .tt th{background:var(--black);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 11px;text-align:left;}
+  .tt th:not(:first-child){text-align:center;}
+  .tt td{padding:0;border-bottom:1px solid var(--border);}
+  .tt tbody tr:nth-child(odd) td{background:var(--bg);}
+  .tt tbody tr:nth-child(even) td{background:var(--white);}
+  .tt .rl{padding:9px 11px;font-weight:700;font-size:.83rem;white-space:nowrap;}
+  .tt .rl small{display:block;font-weight:500;color:var(--muted);font-size:.7rem;margin-top:1px;}
+  .tt td input[type=number]{border:none;border-radius:0;background:transparent;text-align:center;font-size:.92rem;font-weight:700;padding:9px 6px;width:100%;min-width:65px;border-left:1px solid var(--border);box-shadow:none;font-family:var(--font);}
+  .tt td input[type=number]:focus{background:#FFFBE6;border-left:1px solid var(--border);box-shadow:none;border-color:var(--border);}
+  .tt .sc{padding:9px 11px;text-align:center;font-weight:700;font-size:.86rem;border-left:1px solid var(--border);color:var(--muted);}
+  .tt tfoot td{background:var(--black)!important;color:var(--accent);font-weight:900;padding:11px;font-size:.88rem;}
+  .tt tfoot td:not(:first-child){text-align:center;border-left:1px solid rgba(255,215,0,.2);}
+  .tt tfoot .gt{font-size:1.05rem;}
+  /* buttons */
+  .btn{width:100%;background:var(--black);color:var(--accent);border:none;border-radius:var(--r);padding:15px 22px;font-family:var(--font);font-size:.95rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .btn:hover{background:#222;}
+  .btn:active{transform:scale(.99);}
+  .btn-sec{background:var(--bg);color:var(--black);}
+  .btn-sec:hover{background:var(--border);}
+  /* summary */
+  .sum-panel{background:var(--black);border-radius:var(--r);padding:22px;margin-top:18px;}
+  .sum-panel h3{color:var(--accent);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+  .srow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.83rem;}
+  .srow:last-child{border-bottom:none;}
+  .sk{color:rgba(255,255,255,.42);font-weight:500;}
+  .sv{color:var(--white);font-weight:600;text-align:right;max-width:58%;white-space:pre-line;}
+  .sdiv{color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px 0 3px;border-bottom:none!important;}
+  .btn-clip{margin-top:14px;width:100%;background:var(--accent);color:var(--black);border:none;border-radius:var(--r);padding:11px 18px;font-family:var(--font);font-size:.83rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:opacity .15s;}
+  .btn-clip:hover{opacity:.85;}
+  /* sent screen */
+  .sent{background:var(--white);border-radius:var(--r);border:2px solid var(--black);padding:48px 32px;text-align:center;display:none;}
+  .sent .icon{font-size:3rem;margin-bottom:16px;}
+  .sent h2{font-size:1.5rem;font-weight:900;margin-bottom:8px;}
+  .sent p{font-size:.9rem;color:var(--muted);max-width:380px;margin:0 auto 24px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media(max-width:600px){
+    .hero{padding:22px 18px;} .header{padding:14px 18px;} .fc{padding:0 12px 40px;}
+    .card-body{grid-template-columns:1fr;} .hero-title{font-size:1.4rem;}
+    .prog-wrap{padding:0 18px;} .prog-step{font-size:.58rem;padding:10px 0;}
+    .tt td input[type=number]{min-width:48px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
+    <circle cx="18" cy="18" r="18" fill="#FFD700"/>
+    <path d="M18 8c-4.4 0-8 3.6-8 8 0 3 1.6 5.6 4 7v2h8v-2c2.4-1.4 4-4 4-7 0-4.4-3.6-8-8-8z" fill="#0D0D0D"/>
+    <rect x="14" y="25" width="8" height="2" rx="1" fill="#0D0D0D"/>
+    <rect x="15" y="27.5" width="6" height="1.5" rx=".75" fill="#0D0D0D"/>
+  </svg>
+  <div><div class="logo-text">Bright Minds</div><div class="logo-sub">B2B Escolas</div></div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Proposta Comercial · Cadastro</div>
+  <h1 class="hero-title">Informações da Escola</h1>
+  <p class="hero-sub">Preencha os dados abaixo para formalizar o cadastro e receber a proposta de fornecimento de material didático para 2027.</p>
+  <span class="hero-year">Ano Letivo 2027</span>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-inner">
+    <div class="prog-step active" id="p1">1 · Cadastro</div>
+    <div class="prog-step" id="p2">2 · Turmas</div>
+    <div class="prog-step" id="p3">3 · Revisão</div>
+  </div>
+</div>
+
+<div class="fc">
+<form id="mf" novalidate>
+
+<!-- ══ STEP 1 ══ -->
+<div id="s1">
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">1</div><div class="card-ttl">Dados Cadastrais da Escola</div></div>
+    <div class="card-body">
+      <div class="field full">
+        <label class="fl">Razão Social <span class="req">Obrigatório</span></label>
+        <input type="text" id="razaoSocial" placeholder="Ex.: Colégio Exemplo Ltda.">
+        <div class="ferr" id="e-razaoSocial">Informe a razão social.</div>
+      </div>
+      <div class="field">
+        <label class="fl">CNPJ <span class="req">Obrigatório</span></label>
+        <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18">
+        <div class="ferr" id="e-cnpj">CNPJ inválido.</div>
+      </div>
+      <div class="field">
+        <label class="fl">CEP de Entrega <span class="req">Obrigatório</span></label>
+        <div style="position:relative;">
+          <input type="text" id="cep" placeholder="00000-000" maxlength="9" style="padding-right:36px;">
+          <div id="cep-spin" style="display:none;position:absolute;right:11px;top:50%;transform:translateY(-50%);">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="animation:spin .7s linear infinite;"><circle cx="8" cy="8" r="6" stroke="#D9D9D9" stroke-width="2"/><path d="M8 2a6 6 0 0 1 6 6" stroke="#0D0D0D" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div id="cep-ok" style="display:none;position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#00C060;font-weight:700;">✓</div>
+        </div>
+        <div class="hint">Preencha para autocompletar o endereço.</div>
+        <div class="ferr" id="e-cep">CEP inválido ou não encontrado.</div>
+      </div>
+      <div class="field full">
+        <label class="fl">Logradouro <span class="req">Obrigatório</span></label>
+        <input type="text" id="endereco" placeholder="Preenchido pelo CEP">
+        <div class="ferr" id="e-endereco">Informe o logradouro.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Número <span class="req">Obrigatório</span></label>
+        <input type="text" id="numero" placeholder="Nº">
+        <div class="ferr" id="e-numero">Informe o número.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Complemento <span class="opt">Opcional</span></label>
+        <input type="text" id="complemento" placeholder="Sala, bloco, andar...">
+      </div>
+      <div class="field">
+        <label class="fl">Bairro <span class="req">Obrigatório</span></label>
+        <input type="text" id="bairro" placeholder="Preenchido pelo CEP">
+        <div class="ferr" id="e-bairro">Informe o bairro.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Cidade <span class="req">Obrigatório</span></label>
+        <input type="text" id="cidade" placeholder="Preenchida pelo CEP">
+        <div class="ferr" id="e-cidade">Informe a cidade.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Estado <span class="req">Obrigatório</span></label>
+        <select id="estado">
+          <option value="">Selecione</option>
+          <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+          <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+          <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+          <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+          <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+          <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+          <option>SP</option><option>SE</option><option>TO</option>
+        </select>
+        <div class="ferr" id="e-estado">Selecione o estado.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">2</div><div class="card-ttl">Representante Legal</div></div>
+    <div class="card-body">
+      <div class="field full">
+        <label class="fl">Nome Completo <span class="req">Obrigatório</span></label>
+        <input type="text" id="representante" placeholder="Nome conforme documento">
+        <div class="ferr" id="e-representante">Informe o nome.</div>
+      </div>
+      <div class="field">
+        <label class="fl">CPF <span class="req">Obrigatório</span></label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14">
+        <div class="ferr" id="e-cpf">Informe o CPF.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Cargo <span class="opt">Opcional</span></label>
+        <input type="text" id="cargo" placeholder="Ex.: Diretor, Mantenedor">
+      </div>
+      <div class="field">
+        <label class="fl">E-mail <span class="req">Obrigatório</span></label>
+        <input type="email" id="email" placeholder="contato@escola.com.br">
+        <div class="ferr" id="e-email">E-mail inválido.</div>
+      </div>
+      <div class="field">
+        <label class="fl">Telefone / WhatsApp <span class="req">Obrigatório</span></label>
+        <input type="tel" id="telefone" placeholder="(00) 00000-0000" maxlength="15">
+        <div class="ferr" id="e-telefone">Informe um telefone.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">3</div><div class="card-ttl">Responsável Pedagógico</div></div>
+    <div class="card-body">
+      <div class="field full">
+        <label class="fl">Nome <span class="req">Obrigatório</span></label>
+        <input type="text" id="respPed" placeholder="Quem coordenará o uso das apostilas">
+        <div class="hint">Participará dos treinamentos e reuniões. Pode ser o mesmo que o representante legal.</div>
+        <div class="ferr" id="e-respPed">Informe o responsável pedagógico.</div>
+      </div>
+      <div class="field">
+        <label class="fl">E-mail <span class="opt">Opcional</span></label>
+        <input type="email" id="emailPed" placeholder="pedagogico@escola.com.br">
+      </div>
+      <div class="field">
+        <label class="fl">WhatsApp <span class="opt">Opcional</span></label>
+        <input type="tel" id="wppPed" placeholder="(00) 00000-0000" maxlength="15">
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+    <button type="button" class="btn" style="width:auto;padding:13px 34px;" onclick="go2()">
+      Próximo
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div><!-- /s1 -->
+
+<!-- ══ STEP 2 ══ -->
+<div id="s2" style="display:none;">
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">4</div><div class="card-ttl">Distribuição de Alunos por Turma</div></div>
+    <div class="card-body one">
+      <div class="hint">Preencha o número de alunos por ano e turno. Deixe em branco os que não se aplicam. O total é calculado automaticamente.</div>
+      <div style="overflow-x:auto;">
+      <table class="tt">
+        <thead>
+          <tr>
+            <th style="min-width:155px;">Ano / Série</th>
+            <th>Manhã</th><th>Tarde</th><th>Integral</th><th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rl">6º Ano <small>Fund. II</small></td><td><input type="number" data-row="r6" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r6" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r6" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-r6">—</td></tr>
+          <tr><td class="rl">7º Ano <small>Fund. II</small></td><td><input type="number" data-row="r7" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r7" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r7" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-r7">—</td></tr>
+          <tr><td class="rl">8º Ano <small>Fund. II</small></td><td><input type="number" data-row="r8" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r8" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r8" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-r8">—</td></tr>
+          <tr><td class="rl">9º Ano <small>Fund. II</small></td><td><input type="number" data-row="r9" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r9" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="r9" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-r9">—</td></tr>
+          <tr><td class="rl">1ª Série <small>Ens. Médio</small></td><td><input type="number" data-row="e1" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e1" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e1" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-e1">—</td></tr>
+          <tr><td class="rl">2ª Série <small>Ens. Médio</small></td><td><input type="number" data-row="e2" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e2" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e2" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-e2">—</td></tr>
+          <tr><td class="rl">3ª Série <small>Ens. Médio</small></td><td><input type="number" data-row="e3" data-col="m" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e3" data-col="t" min="0" placeholder="—" oninput="rc()"></td><td><input type="number" data-row="e3" data-col="i" min="0" placeholder="—" oninput="rc()"></td><td class="sc" id="sb-e3">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="font-weight:900;padding-left:11px;">TOTAL</td>
+            <td id="tm">—</td><td id="tt2">—</td><td id="ti">—</td>
+            <td class="gt" id="tg">—</td>
+          </tr>
+        </tfoot>
+      </table>
+      </div>
+      <div class="ferr" id="e-turmas" style="margin-top:5px;">Preencha ao menos um campo.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">5</div><div class="card-ttl">Informações Adicionais</div></div>
+    <div class="card-body">
+      <div class="field">
+        <label class="fl">Início das Aulas em 2027 <span class="opt">Opcional</span></label>
+        <input type="date" id="inicio" value="2027-02-01">
+        <div class="hint">Para definir o prazo de entrega das apostilas.</div>
+      </div>
+      <div class="field full">
+        <label class="fl">Observações <span class="opt">Opcional</span></label>
+        <textarea id="obs" placeholder="Ex.: entrega em duas etapas, necessidades pedagógicas específicas, restrições de prazo..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;gap:10px;margin-top:6px;">
+    <button type="button" class="btn btn-sec" style="width:auto;padding:13px 26px;" onclick="go1()">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12L3 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Voltar
+    </button>
+    <button type="button" class="btn" style="width:auto;padding:13px 34px;" onclick="go3()">
+      Revisar Cadastro
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div><!-- /s2 -->
+
+<!-- ══ STEP 3 ══ -->
+<div id="s3" style="display:none;">
+  <div class="card">
+    <div class="card-hdr"><div class="card-num">✓</div><div class="card-ttl">Revisão dos Dados</div></div>
+    <div class="card-body one" style="padding-bottom:8px;">
+      <div id="sumContent"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
+    <button type="button" class="btn btn-sec" onclick="go2(true)" style="width:auto;align-self:flex-start;padding:11px 24px;">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12L3 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Voltar e Editar
+    </button>
+    <button type="button" class="btn" id="btnEnviar" onclick="enviar()">
+      <span id="btnTxt">Confirmar e Enviar Cadastro</span>
+      <div id="btnSpin" style="display:none;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="animation:spin .7s linear infinite;"><circle cx="8" cy="8" r="6" stroke="rgba(255,215,0,.3)" stroke-width="2"/><path d="M8 2a6 6 0 0 1 6 6" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </button>
+    <button type="button" class="btn-clip" onclick="copiarDados()">Copiar para área de transferência</button>
+  </div>
+</div><!-- /s3 -->
+
+<!-- ══ ENVIADO ══ -->
+<div class="sent" id="sent">
+  <div class="icon">🎉</div>
+  <h2>Cadastro enviado!</h2>
+  <p>Recebemos os dados da escola. Nossa equipe entrará em contato em breve para seguir com a proposta do ano letivo de 2027.</p>
+  <button type="button" class="btn" style="max-width:280px;margin:0 auto;" onclick="novo()">Cadastrar outra escola</button>
+</div>
+
+</form>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAY8ZSAjEfApv3vCjJfT0Fgsen9bFLQ8wA",
+  authDomain: "bright-minds-escolas.firebaseapp.com",
+  projectId: "bright-minds-escolas",
+  storageBucket: "bright-minds-escolas.firebasestorage.app",
+  messagingSenderId: "645901724785",
+  appId: "1:645901724785:web:8711341b6bf411accbbfd0",
+  measurementId: "G-QH1M4EP6K8"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+window._salvarFirebase = async function(payload) {
+  const docRef = await addDoc(collection(db, "cadastros"), {
+    ...payload,
+    criadoEm: serverTimestamp()
+  });
+  return docRef.id;
+};
+</script>
+
+<script>
+// ── masks ──
+const mCNPJ=v=>{v=v.replace(/\D/g,'').slice(0,14);v=v.replace(/^(\d{2})(\d)/,'$1.$2');v=v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');v=v.replace(/\.(\d{3})(\d)/,'.$1/$2');v=v.replace(/(\d{4})(\d)/,'$1-$2');return v;};
+const mCPF=v=>{v=v.replace(/\D/g,'').slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2');v=v.replace(/(\d{3})\.(\d{3})(\d)/,'$1.$2.$3');v=v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,'$1.$2.$3-$4');return v;};
+const mCEP=v=>{v=v.replace(/\D/g,'').slice(0,8);v=v.replace(/(\d{5})(\d)/,'$1-$2');return v;};
+const mTel=v=>{v=v.replace(/\D/g,'').slice(0,11);if(v.length<=10)v=v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');else v=v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');return v;};
+
+// live validation helpers — clears error as user types valid value
+function liveClear(id, errId, testFn) {
+  const el = document.getElementById(id);
+  const er = document.getElementById(errId);
+  el.addEventListener('input', () => {
+    if (testFn(el.value)) {
+      el.classList.remove('bad'); el.classList.add('ok');
+      er.style.display = 'none';
+    } else if (el.classList.contains('bad')) {
+      // only show error if was already marked bad (don't flash on first keystroke)
+    }
+  });
+}
+
+// ── CNPJ validation ──
+function okCNPJ(cnpj) {
+  cnpj = cnpj.replace(/\D/g,'');
+  if (cnpj.length!==14 || /^(\d)\1+$/.test(cnpj)) return false;
+  const calc=(c,l)=>{let s=0,p=l-7;for(let i=l;i>=1;i--){s+=parseInt(c[l-i])*p--;if(p<2)p=9;}const r=s%11<2?0:11-(s%11);return r===parseInt(c[l]);};
+  return calc(cnpj,12)&&calc(cnpj,13);
+}
+
+// ── ViaCEP ──
+let cepTmo=null;
+async function buscarCEP(v) {
+  const d=v.replace(/\D/g,'');
+  if(d.length!==8)return;
+  const spin=document.getElementById('cep-spin'),ok=document.getElementById('cep-ok'),er=document.getElementById('e-cep'),el=document.getElementById('cep');
+  spin.style.display='block';ok.style.display='none';er.style.display='none';el.classList.remove('ok','bad');
+  try {
+    const r=await fetch(`https://viacep.com.br/ws/${d}/json/`);
+    const data=await r.json();
+    spin.style.display='none';
+    if(data.erro){el.classList.add('bad');er.textContent='CEP não encontrado.';er.style.display='block';return;}
+    const set=(id,val)=>{if(val){const f=document.getElementById(id);f.value=val;f.classList.add('ok');f.classList.remove('bad');const e=document.getElementById('e-'+id);if(e)e.style.display='none';}};
+    set('endereco',data.logradouro);set('bairro',data.bairro);set('cidade',data.localidade);
+    const sel=document.getElementById('estado');
+    for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===data.uf){sel.selectedIndex=i;sel.classList.add('ok');sel.classList.remove('bad');document.getElementById('e-estado').style.display='none';break;}}
+    el.classList.add('ok');ok.style.display='block';
+    setTimeout(()=>document.getElementById('numero').focus(),80);
+  } catch(e){spin.style.display='none';el.classList.add('bad');er.textContent='Erro ao consultar CEP.';er.style.display='block';}
+}
+
+// ── event listeners ──
+document.getElementById('cnpj').addEventListener('input',function(){
+  this.value=mCNPJ(this.value);
+  const d=this.value.replace(/\D/g,''),er=document.getElementById('e-cnpj');
+  if(d.length===14){if(okCNPJ(d)){this.classList.add('ok');this.classList.remove('bad');er.style.display='none';}
+  else{this.classList.add('bad');this.classList.remove('ok');er.textContent='CNPJ inválido.';er.style.display='block';}}
+  else{this.classList.remove('ok','bad');er.style.display='none';}
+});
+document.getElementById('cpf').addEventListener('input',function(){this.value=mCPF(this.value);});
+document.getElementById('cep').addEventListener('input',function(){
+  this.value=mCEP(this.value);document.getElementById('cep-ok').style.display='none';
+  clearTimeout(cepTmo);const d=this.value.replace(/\D/g,'');
+  if(d.length===8){cepTmo=setTimeout(()=>buscarCEP(this.value),380);}
+  else{document.getElementById('cep-spin').style.display='none';this.classList.remove('ok','bad');document.getElementById('e-cep').style.display='none';}
+});
+document.getElementById('telefone').addEventListener('input',function(){this.value=mTel(this.value);});
+document.getElementById('wppPed').addEventListener('input',function(){this.value=mTel(this.value);});
+
+// live-clear errors as user types into previously-flagged fields
+['razaoSocial','endereco','numero','bairro','cidade','representante','cpf','respPed'].forEach(id=>{
+  const er=document.getElementById('e-'+id);
+  if(!er)return;
+  document.getElementById(id).addEventListener('input',function(){
+    if(this.value.trim()){this.classList.remove('bad');this.classList.add('ok');er.style.display='none';}
+  });
+});
+document.getElementById('email').addEventListener('input',function(){
+  const er=document.getElementById('e-email');
+  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())){this.classList.remove('bad');this.classList.add('ok');er.style.display='none';}
+  else{this.classList.remove('ok');}
+});
+document.getElementById('telefone').addEventListener('input',function(){
+  const er=document.getElementById('e-telefone');
+  if(this.value.replace(/\D/g,'').length>=10){this.classList.remove('bad');this.classList.add('ok');er.style.display='none';}
+  else this.classList.remove('ok');
+});
+document.getElementById('estado').addEventListener('change',function(){
+  if(this.value){this.classList.remove('bad');document.getElementById('e-estado').style.display='none';}
+});
+
+// ── turma table ──
+const ROWS=['r6','r7','r8','r9','e1','e2','e3'],COLS=['m','t','i'];
+const gv=(row,col)=>parseInt(document.querySelector(`input[data-row="${row}"][data-col="${col}"]`)?.value)||0;
+function rc(){
+  let tm=0,tt=0,ti=0,tg=0;
+  ROWS.forEach(row=>{const m=gv(row,'m'),t=gv(row,'t'),i=gv(row,'i'),s=m+t+i;document.getElementById('sb-'+row).textContent=s||'—';tm+=m;tt+=t;ti+=i;tg+=s;});
+  document.getElementById('tm').textContent=tm||'—';
+  document.getElementById('tt2').textContent=tt||'—';
+  document.getElementById('ti').textContent=ti||'—';
+  document.getElementById('tg').textContent=tg||'—';
+}
+const totalAlunos=()=>ROWS.reduce((a,r)=>a+COLS.reduce((b,c)=>b+gv(r,c),0),0);
+const turmasSummary=()=>{
+  const rl={'r6':'6º Ano (FII)','r7':'7º Ano (FII)','r8':'8º Ano (FII)','r9':'9º Ano (FII)','e1':'1ª Série (EM)','e2':'2ª Série (EM)','e3':'3ª Série (EM)'};
+  const cl={'m':'Manhã','t':'Tarde','i':'Integral'};
+  return ROWS.map(r=>{const p=COLS.filter(c=>gv(r,c)>0).map(c=>`${cl[c]}: ${gv(r,c)}`);return p.length?`${rl[r]} → ${p.join(', ')}`:null;}).filter(Boolean).join('\n')||'—';
+};
+
+// ── validate ──
+const req=(id,eid)=>{const el=document.getElementById(id),ok=el.value.trim()!=='';document.getElementById(eid).style.display=ok?'none':'block';el.classList.toggle('bad',!ok);el.classList.toggle('ok',ok);return ok;};
+const reqSel=(id,eid)=>{const el=document.getElementById(id),ok=!!el.value;document.getElementById(eid).style.display=ok?'none':'block';el.classList.toggle('bad',!ok);return ok;};
+const reqEmail=(id,eid)=>{const el=document.getElementById(id),ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());document.getElementById(eid).style.display=ok?'none':'block';el.classList.toggle('bad',!ok);el.classList.toggle('ok',ok);return ok;};
+
+function valS1(){
+  let ok=true;
+  ok=req('razaoSocial','e-razaoSocial')&&ok;
+  const cEl=document.getElementById('cnpj'),cD=cEl.value.replace(/\D/g,''),cEr=document.getElementById('e-cnpj');
+  if(!cD){cEl.classList.add('bad');cEr.textContent='Informe o CNPJ.';cEr.style.display='block';ok=false;}
+  else if(!okCNPJ(cD)){cEl.classList.add('bad');cEr.textContent='CNPJ inválido.';cEr.style.display='block';ok=false;}
+  else{cEl.classList.remove('bad');cEl.classList.add('ok');cEr.style.display='none';}
+  const zpEl=document.getElementById('cep'),zpEr=document.getElementById('e-cep');
+  if(!zpEl.classList.contains('ok')){zpEl.classList.add('bad');zpEr.textContent='Preencha um CEP válido.';zpEr.style.display='block';ok=false;}
+  ok=req('endereco','e-endereco')&&ok;ok=req('numero','e-numero')&&ok;ok=req('bairro','e-bairro')&&ok;ok=req('cidade','e-cidade')&&ok;ok=reqSel('estado','e-estado')&&ok;
+  ok=req('representante','e-representante')&&ok;ok=req('cpf','e-cpf')&&ok;ok=reqEmail('email','e-email')&&ok;ok=req('telefone','e-telefone')&&ok;ok=req('respPed','e-respPed')&&ok;
+  return ok;
+}
+function valS2(){
+  const t=totalAlunos(),er=document.getElementById('e-turmas');
+  if(t===0){er.style.display='block';return false;}er.style.display='none';return true;
+}
+
+// ── navigation ──
+const show=(id)=>{['s1','s2','s3','sent'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none');window.scrollTo({top:0,behavior:'smooth'});};
+function go2(back=false){
+  if(!back&&!valS1())return;
+  show('s2');document.getElementById('p1').className='prog-step done';document.getElementById('p2').className='prog-step active';document.getElementById('p3').className='prog-step';
+}
+function go1(){show('s1');document.getElementById('p1').className='prog-step active';document.getElementById('p2').className='prog-step';document.getElementById('p3').className='prog-step';}
+function go3(){
+  if(!valS2())return;
+  const total=totalAlunos();
+  const items=[
+    {d:true,k:'Dados da Escola'},
+    {k:'Razão Social',v:_v('razaoSocial')},{k:'CNPJ',v:_v('cnpj')},
+    {k:'Endereço',v:`${_v('endereco')}, ${_v('numero')}${_v('complemento')?' — '+_v('complemento'):''}`},
+    {k:'Bairro',v:_v('bairro')},{k:'Cidade / Estado',v:`${_v('cidade')} / ${_v('estado')}`},{k:'CEP',v:_v('cep')},
+    {d:true,k:'Representante Legal'},
+    {k:'Nome',v:_v('representante')},{k:'CPF',v:_v('cpf')},{k:'Cargo',v:_v('cargo')||'—'},{k:'E-mail',v:_v('email')},{k:'Telefone',v:_v('telefone')},
+    {d:true,k:'Responsável Pedagógico'},
+    {k:'Nome',v:_v('respPed')},{k:'E-mail',v:_v('emailPed')||'—'},{k:'WhatsApp',v:_v('wppPed')||'—'},
+    {d:true,k:'Turmas e Alunos'},
+    {k:'Distribuição',v:turmasSummary()},{k:'Total de Alunos',v:String(total)},
+    {d:true,k:'Informações Adicionais'},
+    {k:'Início das Aulas',v:_v('inicio')||'—'},{k:'Observações',v:_v('obs')||'—'},
+  ];
+  document.getElementById('sumContent').innerHTML=items.map(it=>it.d
+    ?`<div class="srow sdiv">${it.k}</div>`
+    :`<div class="srow"><span class="sk">${it.k}</span><span class="sv">${it.v}</span></div>`
+  ).join('');
+  window._payload=items;
+  show('s3');document.getElementById('p1').className='prog-step done';document.getElementById('p2').className='prog-step done';document.getElementById('p3').className='prog-step active';
+}
+const _v=id=>document.getElementById(id)?.value?.trim()||'';
+
+// ── enviar ──
+async function enviar(){
+  const btn=document.getElementById('btnEnviar'),txt=document.getElementById('btnTxt'),spin=document.getElementById('btnSpin');
+  btn.disabled=true;txt.textContent='Enviando...';spin.style.display='block';
+  try{
+    const flat={};
+    (window._payload||[]).filter(x=>!x.d).forEach(x=>{flat[x.k]=x.v;});
+    flat.totalAlunos=totalAlunos();
+    flat.turmasRaw={};
+    ROWS.forEach(r=>COLS.forEach(c=>{const v=gv(r,c);if(v>0)flat.turmasRaw[r+'_'+c]=v;}));
+    if(window._salvarFirebase){await window._salvarFirebase(flat);}
+  }catch(e){console.error('Firebase error:',e);}
+  btn.disabled=false;txt.textContent='Confirmar e Enviar Cadastro';spin.style.display='none';
+  show('sent');document.getElementById('p3').className='prog-step done';
+}
+
+// ── copiar ──
+function copiarDados(){
+  const text=(window._payload||[]).map(it=>it.d?`\n── ${it.k} ──`:`${it.k}: ${it.v}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.querySelector('.btn-clip');btn.textContent='✓ Copiado!';
+    setTimeout(()=>btn.textContent='Copiar para área de transferência',2000);
+  });
+}
+
+// ── novo cadastro ──
+function novo(){
+  document.getElementById('mf').reset();
+  document.querySelectorAll('.ok,.bad').forEach(el=>el.classList.remove('ok','bad'));
+  document.querySelectorAll('.ferr').forEach(el=>el.style.display='none');
+  document.getElementById('cep-ok').style.display='none';
+  rc();show('s1');
+  ['p1','p2','p3'].forEach((id,i)=>document.getElementById(id).className='prog-step'+(i===0?' active':''));
+}
+</script>
+</body>
+</html>
