@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Minds — Conheça Nossa Proposta</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ac:#FFD700;--bk:#0D0D0D;--wh:#FFFFFF;--bg:#F7F7F7;
+  --mu:#5A5A5A;--bd:#D9D9D9;--er:#FF2050;--ok:#00C060;
+  --r:10px;--f:'Barlow',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:var(--bg);color:var(--bk);min-height:100vh;}
+
+/* ── HEADER ── */
+.hdr{background:var(--bk);padding:18px 40px;display:flex;align-items:center;gap:14px;}
+.logo-t{font-size:1.1rem;font-weight:900;color:var(--ac);letter-spacing:.04em;text-transform:uppercase;}
+.logo-s{font-size:.65rem;color:rgba(255,215,0,.5);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+
+/* ── HERO ── */
+.hero{background:var(--ac);padding:48px 40px 44px;border-bottom:5px solid var(--bk);}
+.hero-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(13,13,13,.5);margin-bottom:10px;}
+.hero-title{font-size:2.4rem;font-weight:900;color:var(--bk);line-height:1.1;margin-bottom:12px;max-width:600px;}
+.hero-sub{font-size:1rem;color:rgba(13,13,13,.65);max-width:520px;line-height:1.6;font-weight:500;}
+
+/* ── FORM AREA ── */
+.wrap{max-width:560px;margin:0 auto;padding:40px 24px 60px;}
+
+/* ── STEP 1: FORM ── */
+.card{background:var(--wh);border-radius:var(--r);border:1.5px solid var(--bd);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.card-hdr{background:var(--bk);padding:20px 28px;}
+.card-hdr h2{font-size:1.05rem;font-weight:700;color:var(--wh);letter-spacing:.02em;}
+.card-hdr p{font-size:.82rem;color:rgba(255,255,255,.5);margin-top:4px;}
+.card-body{padding:28px;}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.field:last-child{margin-bottom:0;}
+.fl{font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu);}
+input[type=text],input[type=email],input[type=tel],input[type=number]{
+  font-family:var(--f);font-size:.98rem;font-weight:500;color:var(--bk);
+  background:var(--wh);border:1.5px solid var(--bd);border-radius:var(--r);
+  padding:12px 15px;transition:border-color .15s,box-shadow .15s;outline:none;width:100%;
+  -webkit-appearance:none;appearance:none;
+}
+input:focus{border-color:var(--bk);box-shadow:0 0 0 3px rgba(255,215,0,.3);}
+input.ok{border-color:var(--ok);}
+input.bad{border-color:var(--er);}
+.hint{font-size:.72rem;color:var(--mu);line-height:1.4;}
+.ferr{font-size:.72rem;color:var(--er);font-weight:600;display:none;}
+
+/* CEP spinner */
+.cep-wrap{position:relative;}
+.cep-wrap input{padding-right:36px;}
+.cep-spin{display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);}
+.cep-ok{display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ok);font-weight:700;font-size:1rem;}
+
+/* Row layout */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* Estimativa label */
+.est-label{font-size:.72rem;color:var(--mu);font-style:italic;margin-top:2px;}
+
+/* Submit */
+.btn{width:100%;background:var(--bk);color:var(--ac);border:none;border-radius:var(--r);padding:16px 22px;font-family:var(--f);font-size:1rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:28px;}
+.btn:hover{background:#222;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── STEP 2: CALENDLY ── */
+#step2{display:none;}
+.thanks{text-align:center;padding:32px 0 24px;}
+.thanks .check{width:56px;height:56px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;}
+.thanks h2{font-size:1.5rem;font-weight:900;margin-bottom:10px;}
+.thanks p{font-size:.95rem;color:var(--mu);line-height:1.65;max-width:440px;margin:0 auto 6px;}
+.thanks .nome-escola{font-size:.88rem;font-weight:700;color:var(--bk);margin-top:8px;}
+
+.cal-wrap{background:var(--wh);border-radius:var(--r);border:1.5px solid var(--bd);overflow:hidden;margin-top:24px;}
+.cal-label{background:var(--bk);padding:14px 22px;font-size:.82rem;font-weight:700;color:var(--ac);letter-spacing:.04em;text-transform:uppercase;}
+.calendly-inline-widget{min-width:100%;height:680px;}
+
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin-svg{animation:spin .7s linear infinite;}
+
+@media(max-width:600px){
+  .hero{padding:32px 20px 28px;}.hdr{padding:14px 20px;}
+  .wrap{padding:24px 14px 40px;}.hero-title{font-size:1.8rem;}
+  .row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+    <circle cx="18" cy="18" r="18" fill="#FFD700"/>
+    <path d="M18 8c-4.4 0-8 3.6-8 8 0 3 1.6 5.6 4 7v2h8v-2c2.4-1.4 4-4 4-7 0-4.4-3.6-8-8-8z" fill="#0D0D0D"/>
+    <rect x="14" y="25" width="8" height="2" rx="1" fill="#0D0D0D"/>
+    <rect x="15" y="27.5" width="6" height="1.5" rx=".75" fill="#0D0D0D"/>
+  </svg>
+  <div><div class="logo-t">Bright Minds</div><div class="logo-s">B2B Escolas</div></div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Proposta Comercial 2027</div>
+  <h1 class="hero-title">Leve a Bright Minds para a sua escola</h1>
+  <p class="hero-sub">Preencha os dados abaixo e agende uma conversa de 30 minutos com a nossa equipe. Vamos apresentar a proposta completa para o ano letivo de 2027.</p>
+</div>
+
+<!-- FORM WRAP -->
+<div class="wrap">
+
+  <!-- STEP 1 -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-hdr">
+        <h2>Dados da escola</h2>
+        <p>Leva menos de 2 minutos para preencher</p>
+      </div>
+      <div class="card-body">
+
+        <div class="field">
+          <label class="fl">Nome da Escola</label>
+          <input type="text" id="escola" placeholder="Ex.: Colégio Exemplo">
+          <div class="ferr" id="e-escola">Informe o nome da escola.</div>
+        </div>
+
+        <div class="field">
+          <label class="fl">CEP</label>
+          <div class="cep-wrap">
+            <input type="text" id="cep" placeholder="00000-000" maxlength="9">
+            <div class="cep-spin" id="cepSpin">
+              <svg class="spin-svg" width="15" height="15" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke="#D9D9D9" stroke-width="2"/>
+                <path d="M8 2a6 6 0 0 1 6 6" stroke="#0D0D0D" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="cep-ok" id="cepOk">✓</div>
+          </div>
+          <div class="hint" id="cepHint">Preencha para autocompletar cidade e estado.</div>
+          <div class="ferr" id="e-cep">Informe um CEP válido.</div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="fl">Cidade</label>
+            <input type="text" id="cidade" placeholder="Preenchida pelo CEP">
+            <div class="ferr" id="e-cidade">Informe a cidade.</div>
+          </div>
+          <div class="field">
+            <label class="fl">Estado</label>
+            <input type="text" id="estado" placeholder="UF" maxlength="2" style="text-transform:uppercase">
+            <div class="ferr" id="e-estado">Informe o estado.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Nome do Contato</label>
+          <input type="text" id="contato" placeholder="Nome de quem está preenchendo">
+          <div class="ferr" id="e-contato">Informe o nome do contato.</div>
+        </div>
+
+        <div class="field">
+          <label class="fl">Função na Escola</label>
+          <input type="text" id="funcao" placeholder="Ex.: Diretora, Coordenadora Pedagógica">
+          <div class="ferr" id="e-funcao">Informe a função.</div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="fl">E-mail</label>
+            <input type="email" id="email" placeholder="contato@escola.com.br">
+            <div class="ferr" id="e-email">E-mail inválido.</div>
+          </div>
+          <div class="field">
+            <label class="fl">Telefone / WhatsApp</label>
+            <input type="tel" id="telefone" placeholder="(00) 00000-0000" maxlength="15">
+            <div class="ferr" id="e-telefone">Informe um telefone.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="fl">Alunos — Fund. II (6º ao 9º ano)</label>
+            <input type="number" id="alunosFII" placeholder="Ex.: 120" min="0">
+            <div class="est-label">Estimativa aproximada é suficiente</div>
+            <div class="ferr" id="e-alunosFII">Informe um número.</div>
+          </div>
+          <div class="field">
+            <label class="fl">Alunos — Ens. Médio (1ª a 3ª série)</label>
+            <input type="number" id="alunosEM" placeholder="Ex.: 90" min="0">
+            <div class="est-label">Estimativa aproximada é suficiente</div>
+            <div class="ferr" id="e-alunosEM">Informe um número.</div>
+          </div>
+        </div>
+
+        <button class="btn" id="btnAvancar" onclick="avancar()">
+          <span id="btnTxt">Agendar conversa</span>
+          <div id="btnSpin" style="display:none;">
+            <svg class="spin-svg" width="15" height="15" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6" stroke="rgba(255,215,0,.3)" stroke-width="2"/>
+              <path d="M8 2a6 6 0 0 1 6 6" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="btnArr">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: CALENDLY -->
+  <div id="step2">
+    <div class="thanks">
+      <div class="check">✓</div>
+      <h2>Dados recebidos!</h2>
+      <p>Obrigado pelo interesse. Agora é só escolher um horário para a nossa conversa — são apenas 30 minutos para conhecer a proposta Bright Minds e entender como ela se encaixa na sua escola.</p>
+      <div class="nome-escola" id="thanksEscola"></div>
+    </div>
+
+    <div class="cal-wrap">
+      <div class="cal-label">Escolha um horário que funcione para você</div>
+      <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+      <div class="calendly-inline-widget"
+           data-url="https://calendly.com/viniciusvilaca?hide_gdpr_banner=1&primary_color=0d0d0d&text_color=0d0d0d&background_color=ffffff"
+           style="min-width:100%;height:680px;"></div>
+      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    </div>
+  </div>
+
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyAY8ZSAjEfApv3vCjJfT0Fgsen9bFLQ8wA",
+  authDomain:"bright-minds-escolas.firebaseapp.com",
+  projectId:"bright-minds-escolas",
+  storageBucket:"bright-minds-escolas.firebasestorage.app",
+  messagingSenderId:"645901724785",
+  appId:"1:645901724785:web:8711341b6bf411accbbfd0"
+});
+const db = getFirestore(app);
+
+window._fbReady = true;
+document.dispatchEvent(new Event('fbReady'));
+
+window._salvarLead = async (payload) => {
+  const ref = await addDoc(collection(db, "leads"), {
+    ...payload,
+    criadoEm: serverTimestamp()
+  });
+  return ref.id;
+};
+</script>
+
+<script>
+// ── MASKS ──
+const mCEP = v => { v=v.replace(/\D/g,'').slice(0,8); v=v.replace(/(\d{5})(\d)/,'$1-$2'); return v; };
+const mTel = v => { v=v.replace(/\D/g,'').slice(0,11); return v.length<=10?v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3'):v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3'); };
+
+document.getElementById('cep').addEventListener('input', function(){
+  this.value = mCEP(this.value);
+  document.getElementById('cepOk').style.display = 'none';
+  const d = this.value.replace(/\D/g,'');
+  if (d.length === 8) buscarCEP(d);
+  else { this.classList.remove('ok','bad'); document.getElementById('cepSpin').style.display='none'; document.getElementById('e-cep').style.display='none'; }
+});
+document.getElementById('telefone').addEventListener('input', function(){ this.value = mTel(this.value); });
+document.getElementById('estado').addEventListener('input', function(){ this.value = this.value.toUpperCase().replace(/[^A-Z]/g,''); });
+
+// Live clear
+['escola','contato','funcao','cidade','estado'].forEach(id => {
+  const er = document.getElementById('e-'+id);
+  if (!er) return;
+  document.getElementById(id).addEventListener('input', function(){
+    if (this.value.trim()) { this.classList.remove('bad'); this.classList.add('ok'); er.style.display='none'; }
+  });
+});
+document.getElementById('email').addEventListener('input', function(){
+  const er = document.getElementById('e-email');
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())) { this.classList.remove('bad'); this.classList.add('ok'); er.style.display='none'; }
+  else this.classList.remove('ok');
+});
+document.getElementById('telefone').addEventListener('input', function(){
+  const er = document.getElementById('e-telefone');
+  if (this.value.replace(/\D/g,'').length >= 10) { this.classList.remove('bad'); this.classList.add('ok'); er.style.display='none'; }
+  else this.classList.remove('ok');
+});
+
+// ── ViaCEP ──
+let cepTmo = null;
+async function buscarCEP(d) {
+  const spin = document.getElementById('cepSpin');
+  const ok = document.getElementById('cepOk');
+  const er = document.getElementById('e-cep');
+  const el = document.getElementById('cep');
+  spin.style.display = 'block'; ok.style.display = 'none';
+  try {
+    const res = await fetch(`https://viacep.com.br/ws/${d}/json/`);
+    const data = await res.json();
+    spin.style.display = 'none';
+    if (data.erro) { el.classList.add('bad'); er.textContent='CEP não encontrado.'; er.style.display='block'; return; }
+    const set = (id, val) => { if (val) { const f=document.getElementById(id); f.value=val; f.classList.add('ok'); f.classList.remove('bad'); const e=document.getElementById('e-'+id); if(e) e.style.display='none'; } };
+    set('cidade', data.localidade);
+    set('estado', data.uf);
+    el.classList.add('ok'); ok.style.display = 'block';
+  } catch(e) { spin.style.display='none'; el.classList.add('bad'); er.textContent='Erro ao consultar CEP.'; er.style.display='block'; }
+}
+
+// ── VALIDATE ──
+const req = (id, eid) => { const el=document.getElementById(id), ok=el.value.trim()!==''; document.getElementById(eid).style.display=ok?'none':'block'; el.classList.toggle('bad',!ok); el.classList.toggle('ok',ok); return ok; };
+const reqEmail = (id, eid) => { const el=document.getElementById(id), ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()); document.getElementById(eid).style.display=ok?'none':'block'; el.classList.toggle('bad',!ok); el.classList.toggle('ok',ok); return ok; };
+const reqNum = (id, eid) => {
+  const el=document.getElementById(id), v=parseInt(el.value);
+  const ok = !isNaN(v) && v >= 0;
+  document.getElementById(eid).style.display=ok?'none':'block';
+  el.classList.toggle('bad',!ok); el.classList.toggle('ok',ok);
+  return ok;
+};
+
+// ── SUBMIT ──
+async function avancar() {
+  let ok = true;
+  ok = req('escola','e-escola') && ok;
+  // CEP: just check cidade and estado were filled
+  ok = req('cidade','e-cidade') && ok;
+  ok = req('estado','e-estado') && ok;
+  ok = req('contato','e-contato') && ok;
+  ok = req('funcao','e-funcao') && ok;
+  ok = reqEmail('email','e-email') && ok;
+  ok = req('telefone','e-telefone') && ok;
+  ok = reqNum('alunosFII','e-alunosFII') && ok;
+  ok = reqNum('alunosEM','e-alunosEM') && ok;
+  if (!ok) return;
+
+  const btn = document.getElementById('btnAvancar');
+  const txt = document.getElementById('btnTxt');
+  const sp = document.getElementById('btnSpin');
+  const arr = document.getElementById('btnArr');
+  btn.disabled = true; txt.textContent = 'Salvando...'; sp.style.display='block'; arr.style.display='none';
+
+  const v = id => document.getElementById(id).value.trim();
+  const fii = parseInt(v('alunosFII')) || 0;
+  const em  = parseInt(v('alunosEM'))  || 0;
+
+  const payload = {
+    tipo: 'lead',
+    escola: v('escola'),
+    cep: v('cep'),
+    cidade: v('cidade'),
+    estado: v('estado'),
+    contato: v('contato'),
+    funcao: v('funcao'),
+    email: v('email'),
+    telefone: v('telefone'),
+    alunosFII: fii,
+    alunosEM: em,
+    totalEstimado: fii + em,
+  };
+
+  try {
+    if (window._fbReady && window._salvarLead) await window._salvarLead(payload);
+    else await new Promise(r => { document.addEventListener('fbReady', r, {once:true}); setTimeout(r, 5000); }).then(() => window._salvarLead && window._salvarLead(payload));
+  } catch(e) { console.error('Firebase:', e); }
+
+  // Show step 2
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  document.getElementById('thanksEscola').textContent = v('escola') + ' · ' + v('cidade') + '/' + v('estado');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
